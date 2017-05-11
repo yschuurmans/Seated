@@ -179,10 +179,9 @@ public class RaptorManager : MonoBehaviour
 
     private double updatePos(double pos)
     {
-        pos += getInterval(Time.deltaTime * 1000); 
+        pos += getInterval(Time.deltaTime * 1000);
         if (pos > waveLength)
         {
-            Debug.Log("REset");
             pos -= waveLength;
         }
         return pos;
@@ -200,7 +199,7 @@ public class RaptorManager : MonoBehaviour
         //return waveLength * ratio;
     }
 
-   
+
 
     private double getHeightOfWave(double X)
     {
@@ -227,16 +226,17 @@ public class RaptorManager : MonoBehaviour
         return (ushort)(API.MaxValue * ratio);
     }
 
-    private void startVibration(byte ratpusID, ushort[,] matrix, byte mode, int milliseconds)
+    private void startVibration(byte ratpusID, ushort[,] matrix, byte mode, float milliseconds)
     {
         //ratpusID, matrix, mode, milliseconds
-        StartCoroutine("Fade");
+        StartCoroutine(vibrate(ratpusID, matrix, mode, milliseconds));
     }
 
-    private IEnumerator vibrate(byte ratpusID, ushort[,] matrix, byte mode, int milliseconds)
+    private IEnumerator vibrate(byte ratpusID, ushort[,] matrix, byte mode, float milliseconds)
     {
+        float seconds = milliseconds / 1000;
         API.Vibrate(ratpusID, matrix, mode);
-        yield return (milliseconds);
+        yield return new WaitForSeconds(seconds);
         API.Off(this.raptorID);
         yield return 0;
     }
@@ -279,20 +279,7 @@ public class RaptorManager : MonoBehaviour
 
         yield return 0;
     }
-
-    private ushort[,] getRandomRaptor()
-    {
-        ushort[,] randomRaptor = new ushort[1, 1];
-        List<ushort[,]> allRaptors = new List<ushort[,]>();
-        allRaptors.Add(raptorHead);
-        allRaptors.Add(raptorBack);
-        allRaptors.Add(raptorSeat);
-
-        randomRaptor = allRaptors[UnityEngine.Random.Range(0, allRaptors.Count)];
-
-
-        return randomRaptor;
-    }
+  
 
     public void btnToggleAllRaptors()
     {
@@ -302,5 +289,41 @@ public class RaptorManager : MonoBehaviour
     void OnApplicationQuit()
     {
         API.Stop();
+    }
+
+    public void randomJolt()
+    {
+
+        int rows = 4;
+        int columns = 2;
+        ushort[,] matrix = new ushort[rows, columns];
+
+        int randomRow = UnityEngine.Random.Range(0, rows);
+        int randomColumn = UnityEngine.Random.Range(0, columns);
+
+        //matrix[0, 0] = API.MaxValue;
+        ////matrix[1, 2] = API.MaxValue;
+        ////matrix[2, 2] = API.MaxValue;
+        matrix[randomRow, randomColumn] = API.MaxValue;
+        startVibration(this.raptorID, matrix, API.Mode.Stretch, 200);
+
+        //matrix[0, 1] = API.MaxValue;
+        //matrix[1, 0] = API.MaxValue;
+        ////startVibration(this.raptorID, matrix, API.Mode.Stretch, 2000);
+        //API.Vibrate(raptorID, matrix, API.Mode.Stretch);
+
+        //Debug.Log("First virbration");
+        //System.Threading.Thread.Sleep(2000);
+
+        //Debug.Log("second virbration");
+        //matrix[0, 1] = 30000;
+
+        //API.Vibrate(raptorID, matrix, API.Mode.Stretch);
+        //// startVibration(this.raptorID, matrix, API.Mode.Stretch, 500);
+
+        //System.Threading.Thread.Sleep(2000);
+
+
+
     }
 }
