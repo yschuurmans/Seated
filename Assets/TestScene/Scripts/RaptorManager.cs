@@ -84,13 +84,13 @@ public class RaptorManager : MonoBehaviour
 
     private void CalculateMatrix(int raptorID)
     {
-        for (int columnIndex = 0; columnIndex < StretchMatrix.GetLength(0); columnIndex++)
+        /*for (int columnIndex = 0; columnIndex < StretchMatrix.GetLength(0); columnIndex++)
         {
             for (int rowIndex = 0; rowIndex < StretchMatrix.GetLength(1); rowIndex++)
             {
                 raptorHead[columnIndex, rowIndex] = ActiveInputs.Max(input => input.InputMatrix[columnIndex, rowIndex]);
             }
-        }
+        }*/
     }
 
     private void initWave()

@@ -2,12 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class randomExplosion : MonoBehaviour {
+public class randomExplosion : MonoBehaviour
+{
+
+    public static randomExplosion Instance;
 
     public float force;
     public float radius;
     public bool doExplosion;
     private List<ContactPoint> contactPointsHit = new List<ContactPoint>();
+
+    void Awake()
+    {
+        if(Instance != null)
+            Destroy(gameObject);
+        Instance = this;
+    }
 	// Use this for initialization
 	void Start () {
 		
