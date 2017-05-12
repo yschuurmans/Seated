@@ -8,8 +8,9 @@ public class randomExplosion : MonoBehaviour {
     public float radius;
     public bool doExplosion;
     private List<ContactPoint> contactPointsHit = new List<ContactPoint>();
-	// Use this for initialization
-	void Start () {
+    private List<ContactPoint> knownContactPoints = new List<ContactPoint>();
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
@@ -28,10 +29,19 @@ public class randomExplosion : MonoBehaviour {
             foreach(Collider c in cols)
             {
                 ContactPoint cp = c.GetComponent<ContactPoint>();
-                contactPointsHit.Add(cp);
                 if (cp != null)
                 {
+                    contactPointsHit.Add(cp);
                     cp.force = force - (force / maxDist * Vector3.Distance(c.transform.position, transform.position));
+                    if(!knownContactPoints.Contains(cp)) knownContactPoints.Add(cp);
+                }
+                
+            }
+            foreach(ContactPoint cp in knownContactPoints)
+            {
+                if (!contactPointsHit.Contains(cp))
+                {
+                    cp.force = 0;
                 }
             }
         }

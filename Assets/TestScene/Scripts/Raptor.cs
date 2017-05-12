@@ -61,6 +61,7 @@ namespace Assets.TestScene.Scripts
 
         private ushort GetForce(float force)
         {
+            if (force < 0) force = 0;
             force = force / _maxForce * ushort.MaxValue;
             if (force > ushort.MaxValue) force = ushort.MaxValue;
             return Convert.ToUInt16(force);
