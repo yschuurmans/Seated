@@ -348,32 +348,9 @@ public class RaptorManager : MonoBehaviour
 
     }
 
-    public IEnumerator AddActiveInput(RaptorInput input, float durationInSeconds = 0)
-    {
-        ActiveInputs.Add(input);
-        CalculateMatrix(input.RaptorID);
 
-        if (durationInSeconds == 0) yield break;
-        yield return new WaitForSeconds(durationInSeconds);
-        RemoveActiveInput(input);
-    }
 
-    public void EditInput(RaptorInput input)
-    {
-        //Guard condition
-        if (!ActiveInputs.Contains(input))
-            return;
 
-        CalculateMatrix(input.RaptorID);
-    }
 
-    public void RemoveActiveInput(RaptorInput input)
-    {
-        //Guard condition
-        if (!ActiveInputs.Contains(input))
-            return;
 
-        ActiveInputs.Remove(input);
-        CalculateMatrix(input.RaptorID);
-    }
 }
