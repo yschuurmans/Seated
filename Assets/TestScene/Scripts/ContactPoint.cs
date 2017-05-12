@@ -9,7 +9,7 @@ public class ContactPoint : MonoBehaviour {
     public int row;
     public int column;
 
-    public float force { get { return rb.velocity.magnitude; } }
+    public float force { get; set; }
 
 	// Use this for initialization
 	void Start () {

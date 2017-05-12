@@ -29,7 +29,6 @@ namespace Assets.TestScene.Scripts
 
         void Update()
         {
-            rb.AddForce(Vector3.left);
             UpdateMatrix();
         }
 
@@ -48,8 +47,14 @@ namespace Assets.TestScene.Scripts
 
         private void UpdateMatrix()
         {
-            foreach(ContactPoint cp in contactPoints)
+            for(int i = 0; i<2; i++)
             {
+                Debug.Log(i + " | " + contactPoints.Where(c => c.column == i).Average(c => c.force));
+            }
+            
+            foreach (ContactPoint cp in contactPoints)
+            {
+                
                 StretchMatrix[cp.row, cp.column] = GetForce(cp.force);
             }
         }

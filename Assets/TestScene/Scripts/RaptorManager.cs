@@ -60,10 +60,7 @@ public class RaptorManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        foreach(Raptor raptor in raptors)
-        {
-            API.Vibrate(raptor.StretchMatrix, API.Mode.Stretch);
-        }
+       
 
 
         if (massageState)
@@ -71,9 +68,16 @@ public class RaptorManager : MonoBehaviour
             doWave();
         }
 
-        if (heartbeat)
+        else if (heartbeat)
         {
            StartCoroutine(doHeartBeat());
+        }
+        else
+        {
+            foreach (Raptor raptor in raptors)
+            {
+                API.Vibrate(raptor.StretchMatrix, API.Mode.Stretch);
+            }
         }
 
     }
