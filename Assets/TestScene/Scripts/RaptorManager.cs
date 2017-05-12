@@ -2,12 +2,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Assets.TestScene.Scripts;
 using UnityEngine;
 
 public class RaptorManager : MonoBehaviour
 {
-    
-    
+    public static RaptorManager Instance;
+
     public double waveTime = 2000; //ms
     public double waveLength = 10; 
 
@@ -20,16 +22,24 @@ public class RaptorManager : MonoBehaviour
     bool heartbeat;
     bool beating;
 
+    public ushort[,] StretchMatrix;
+    public List<RaptorInput> ActiveInputs;
 
     protected byte raptorID;
     protected ushort[,] raptorHead;
     protected ushort[,] raptorBack;
     protected ushort[,] raptorSeat;
 
-
-
-
     Capabilities Capabilities;
+
+    
+
+    void Awake()
+    {
+        if (Instance != null)
+            Destroy(this.gameObject);
+        Instance = this;
+    }
 
     // Use this for initialization
     void Start()
@@ -42,6 +52,8 @@ public class RaptorManager : MonoBehaviour
         Raptus.API.OnError += OnError;
 
         Raptus.API.Start();
+
+        RaptorInput.OnInputChanged += CalculateMatrix;
     }
 
     // Update is called once per frame
@@ -59,7 +71,16 @@ public class RaptorManager : MonoBehaviour
 
     }
 
-
+    private void CalculateMatrix(int raptorID)
+    {
+        for (int columnIndex = 0; columnIndex < StretchMatrix.GetLength(0); columnIndex++)
+        {
+            for (int rowIndex = 0; rowIndex < StretchMatrix.GetLength(1); rowIndex++)
+            {
+                raptorHead[columnIndex, rowIndex] = ActiveInputs.Max(input => input.InputMatrix[columnIndex, rowIndex]);
+            }
+        }
+    }
 
     private void initWave()
     {
