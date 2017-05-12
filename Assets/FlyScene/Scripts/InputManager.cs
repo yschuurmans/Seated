@@ -37,7 +37,7 @@ public class InputManager : MonoBehaviour
         state = GamePad.GetState(playerIndex);
         Movement();
         UserInputs();
-       // flyObject.AddForce(transform.forward);
+        flyObject.AddForce(transform.forward);
     }
 
     

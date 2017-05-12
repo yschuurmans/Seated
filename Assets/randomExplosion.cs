@@ -2,15 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class randomExplosion : MonoBehaviour {
+public class randomExplosion : MonoBehaviour
+{
+
+    public static randomExplosion Instance;
 
     public float force;
     public float radius;
     public bool doExplosion;
     private List<ContactPoint> contactPointsHit = new List<ContactPoint>();
     private List<ContactPoint> knownContactPoints = new List<ContactPoint>();
-    // Use this for initialization
-    void Start () {
+
+    void Awake()
+    {
+        if(Instance != null)
+            Destroy(gameObject);
+        Instance = this;
+    }
+	// Use this for initialization
+	void Start () {
 		
 	}
 	
@@ -51,13 +61,13 @@ public class randomExplosion : MonoBehaviour {
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, radius);
-        foreach (var cp in contactPointsHit)
-        {
-            if (cp != null)
-            {
-                Gizmos.color = Color.green;
-                Gizmos.DrawSphere(cp.transform.position, 0.2f);
-            }
-        }
+        //foreach (var cp in contactPointsHit)
+        //{
+        //    if (cp != null)
+        //    {
+        //        Gizmos.color = Color.green;
+        //        Gizmos.DrawSphere(cp.transform.position, 0.2f);
+        //    }
+        //}
     }
 }

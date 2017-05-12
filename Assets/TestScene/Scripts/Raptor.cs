@@ -16,7 +16,7 @@ namespace Assets.TestScene.Scripts
 
         public ContactPoint[] contactPoints;
 
-        private const float _maxForce = 10;
+        
 
         void Start()
         {
@@ -55,17 +55,11 @@ namespace Assets.TestScene.Scripts
             foreach (ContactPoint cp in contactPoints)
             {
                 
-                StretchMatrix[cp.row, cp.column] = GetForce(cp.force);
+                StretchMatrix[cp.row, cp.column] = cp.GetForce;
             }
         }
 
-        private ushort GetForce(float force)
-        {
-            if (force < 0) force = 0;
-            force = force / _maxForce * ushort.MaxValue;
-            if (force > ushort.MaxValue) force = ushort.MaxValue;
-            return Convert.ToUInt16(force);
-        }
+
 
         private void OnInputChanged(int raptorID)
         {
