@@ -2,12 +2,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Assets.TestScene.Scripts;
 using UnityEngine;
 
 public class RaptorManager : MonoBehaviour
 {
+    public List<Raptor> raptors = new List<Raptor>();
+    public static RaptorManager Instance;
 
-    
     public double waveTime = 2000; //ms
     public double waveLength = 10; 
 
@@ -20,16 +23,24 @@ public class RaptorManager : MonoBehaviour
     bool heartbeat;
     bool beating;
 
+    public ushort[,] StretchMatrix;
+    public List<RaptorInput> ActiveInputs;
 
     protected byte raptorID;
     protected ushort[,] raptorHead;
     protected ushort[,] raptorBack;
     protected ushort[,] raptorSeat;
 
-
-
-
     Capabilities Capabilities;
+
+    
+
+    void Awake()
+    {
+        if (Instance != null)
+            Destroy(this.gameObject);
+        Instance = this;
+    }
 
     // Use this for initialization
     void Start()
@@ -42,24 +53,45 @@ public class RaptorManager : MonoBehaviour
         Raptus.API.OnError += OnError;
 
         Raptus.API.Start();
+
+        RaptorInput.OnInputChanged += CalculateMatrix;
     }
 
     // Update is called once per frame
     void Update()
     {
+       
+
+
         if (massageState)
         {
             doWave();
         }
 
-        if (heartbeat)
+        else if (heartbeat)
         {
            StartCoroutine(doHeartBeat());
+        }
+        else
+        {
+            foreach (Raptor raptor in raptors)
+            {
+                API.Vibrate(raptor.StretchMatrix, API.Mode.Stretch);
+            }
         }
 
     }
 
-
+    private void CalculateMatrix(int raptorID)
+    {
+        for (int columnIndex = 0; columnIndex < StretchMatrix.GetLength(0); columnIndex++)
+        {
+            for (int rowIndex = 0; rowIndex < StretchMatrix.GetLength(1); rowIndex++)
+            {
+                raptorHead[columnIndex, rowIndex] = ActiveInputs.Max(input => input.InputMatrix[columnIndex, rowIndex]);
+            }
+        }
+    }
 
     private void initWave()
     {
@@ -166,9 +198,9 @@ public class RaptorManager : MonoBehaviour
         raptorSeat[0, 0] = getVibrateSpeed(getHeightOfWave(waveSeatPos));
         raptorSeat[0, 1] = raptorSeat[0, 0];
 
-        API.Vibrate(raptorID, this.raptorHead, API.Mode.Stretch);
-        API.Vibrate(raptorID, this.raptorBack, API.Mode.Stretch);
-        API.Vibrate(raptorID, this.raptorSeat, API.Mode.Stretch);
+        API.Vibrate(raptorID, this.raptorHead, API.Mode.Head);
+        API.Vibrate(raptorID, this.raptorBack, API.Mode.Back);
+        API.Vibrate(raptorID, this.raptorSeat, API.Mode.Seat);
 
         //API.Vibrate(raptorID, this.raptorBack, API.Mode.);
 
@@ -282,7 +314,7 @@ public class RaptorManager : MonoBehaviour
   
 
     public void btnToggleAllRaptors()
-    {
+    {        
         raptorID = 0;
     }
 
@@ -293,7 +325,6 @@ public class RaptorManager : MonoBehaviour
 
     public void randomJolt()
     {
-
         int rows = 4;
         int columns = 2;
         ushort[,] matrix = new ushort[rows, columns];
@@ -301,29 +332,24 @@ public class RaptorManager : MonoBehaviour
         int randomRow = UnityEngine.Random.Range(0, rows);
         int randomColumn = UnityEngine.Random.Range(0, columns);
 
-        //matrix[0, 0] = API.MaxValue;
-        ////matrix[1, 2] = API.MaxValue;
-        ////matrix[2, 2] = API.MaxValue;
+        
         matrix[randomRow, randomColumn] = API.MaxValue;
-        startVibration(this.raptorID, matrix, API.Mode.Stretch, 200);
-
-        //matrix[0, 1] = API.MaxValue;
-        //matrix[1, 0] = API.MaxValue;
-        ////startVibration(this.raptorID, matrix, API.Mode.Stretch, 2000);
-        //API.Vibrate(raptorID, matrix, API.Mode.Stretch);
-
-        //Debug.Log("First virbration");
-        //System.Threading.Thread.Sleep(2000);
-
-        //Debug.Log("second virbration");
-        //matrix[0, 1] = 30000;
-
-        //API.Vibrate(raptorID, matrix, API.Mode.Stretch);
-        //// startVibration(this.raptorID, matrix, API.Mode.Stretch, 500);
-
-        //System.Threading.Thread.Sleep(2000);
-
-
-
+        startVibration(this.raptorID, matrix, API.Mode.Stretch, 50);
     }
+
+    //matrix[0, 1] = API.MaxValue;
+    //matrix[1, 0] = API.MaxValue;
+    ////startVibration(this.raptorID, matrix, API.Mode.Stretch, 2000);
+    //API.Vibrate(raptorID, matrix, API.Mode.Stretch);
+
+    //Debug.Log("First virbration");
+    //System.Threading.Thread.Sleep(2000);
+
+    //Debug.Log("second virbration");
+    //matrix[0, 1] = 30000;
+
+    //API.Vibrate(raptorID, matrix, API.Mode.Stretch);
+    //// startVibration(this.raptorID, matrix, API.Mode.Stretch, 500);
+
+    //System.Threading.Thread.Sleep(2000);
 }
