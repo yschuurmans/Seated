@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class RaptorManager : MonoBehaviour
 {
+    public List<Raptor> raptors = new List<Raptor>();
     public static RaptorManager Instance;
 
     public double waveTime = 2000; //ms
@@ -59,6 +60,12 @@ public class RaptorManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        foreach(Raptor raptor in raptors)
+        {
+            API.Vibrate(raptor.StretchMatrix, API.Mode.Stretch);
+        }
+
+
         if (massageState)
         {
             doWave();

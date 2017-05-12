@@ -6,7 +6,10 @@ public class ContactPoint : MonoBehaviour {
 
     Rigidbody rb;
 
-    public float force { get { rb.velocity.magnitude; } }
+    public int row;
+    public int column;
+
+    public float force { get { return rb.velocity.magnitude; } }
 
 	// Use this for initialization
 	void Start () {

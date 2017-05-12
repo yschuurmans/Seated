@@ -9,13 +9,56 @@ namespace Assets.TestScene.Scripts
 {
     public class Raptor : MonoBehaviour
     {
+        private Rigidbody rb;
         public int ID;
         public ushort[,] StretchMatrix;
         public List<RaptorInput> ActiveInputs;
 
+        public ContactPoint[] contactPoints;
+
+        private const float _maxForce = 10;
+
         void Start()
         {
+            
+            rb = GetComponent<Rigidbody>();
             RaptorInput.OnInputChanged += OnInputChanged;
+            contactPoints = GetComponentsInChildren<ContactPoint>();
+            initMatrix();
+        }
+
+        void Update()
+        {
+            rb.AddForce(Vector3.left);
+            UpdateMatrix();
+        }
+
+        private void initMatrix()
+        {
+            int maxRow = 0;
+            int maxColumn = 0;
+             foreach (ContactPoint cp in contactPoints)
+            {
+                if (cp.row > maxRow) maxRow = cp.row;
+                if (cp.column > maxColumn) maxColumn = cp.column;
+            }
+
+            StretchMatrix = new ushort[maxRow + 1, maxColumn + 1];
+        }
+
+        private void UpdateMatrix()
+        {
+            foreach(ContactPoint cp in contactPoints)
+            {
+                StretchMatrix[cp.row, cp.column] = GetForce(cp.force);
+            }
+        }
+
+        private ushort GetForce(float force)
+        {
+            force = force / _maxForce * ushort.MaxValue;
+            if (force > ushort.MaxValue) force = ushort.MaxValue;
+            return Convert.ToUInt16(force);
         }
 
         private void OnInputChanged(int raptorID)
