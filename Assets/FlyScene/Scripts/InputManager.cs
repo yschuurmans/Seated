@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
+    public float velocity;
     private Rigidbody flyObject;
     bool playerIndexSet = false;
     GamePadState state;
@@ -37,7 +38,7 @@ public class InputManager : MonoBehaviour
         state = GamePad.GetState(playerIndex);
         Movement();
         UserInputs();
-        flyObject.AddForce(transform.forward);
+        flyObject.AddForce(transform.forward * velocity);
     }
 
     
