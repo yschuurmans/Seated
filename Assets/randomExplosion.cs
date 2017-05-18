@@ -61,13 +61,13 @@ public class randomExplosion : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, radius);
-        //foreach (var cp in contactPointsHit)
-        //{
-        //    if (cp != null)
-        //    {
-        //        Gizmos.color = Color.green;
-        //        Gizmos.DrawSphere(cp.transform.position, 0.2f);
-        //    }
-        //}
+        /*foreach (var cp in contactPointsHit)
+        {
+            if (cp != null)
+            {
+                Gizmos.color = Color.green;
+                Gizmos.DrawSphere(cp.transform.position, 0.2f);
+            }
+        }*/
     }
 }
