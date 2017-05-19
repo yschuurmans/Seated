@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Assets.TestScene.Scripts.HelperClasses;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ContactPoint : MonoBehaviour {
 
-    private const float _maxForce = 10;
+    private const float _maxForce = 100;
 
     Rigidbody rb;
 
@@ -39,8 +40,8 @@ public class ContactPoint : MonoBehaviour {
     {
         if (!Application.isPlaying) return;
         float percentDistance = Mathf.Clamp01( Vector3.Distance(randomExplosion.Instance.transform.position, transform.position) / randomExplosion.Instance.radius);
-        
-        Gizmos.color = new Color(percentDistance * 0.77f + 0.23f, 1 - (1 / percentDistance * 0.77f + 0.23f), 0.23f);
+
+        Gizmos.color = ColorHelper.GetLerpedColor(Color.red, Color.green, GetForce / ushort.MaxValue);
         Gizmos.DrawSphere(transform.position, 0.2f);
     }
 }
