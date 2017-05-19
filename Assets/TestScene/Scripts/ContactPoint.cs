@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Assets.TestScene.Scripts.HelperClasses;
 using UnityEngine;
 
 public class ContactPoint : MonoBehaviour {
@@ -41,7 +40,7 @@ public class ContactPoint : MonoBehaviour {
         if (!Application.isPlaying) return;
         float percentDistance = Mathf.Clamp01( Vector3.Distance(randomExplosion.Instance.transform.position, transform.position) / randomExplosion.Instance.radius);
         
-        Gizmos.color = ColorHelper.GetLerpedColor(Color.red, Color.green, (float)GetForce / ushort.MaxValue);
+        Gizmos.color = new Color(percentDistance * 0.77f + 0.23f, 1 - (1 / percentDistance * 0.77f + 0.23f), 0.23f);
         Gizmos.DrawSphere(transform.position, 0.2f);
     }
 }
