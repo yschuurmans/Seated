@@ -5,14 +5,22 @@ using UnityEngine;
 
 public class LiftMovement : MonoBehaviour
 {
-    public float LiftMultiplier;
-    public float ForwardLiftMultiplier;
+    public float LiftMultiplier = 0.75f;
+    public float UpwardLiftRatio =1f;
+    public float ForwardLiftRatio = 3f;
+    public float GravModifierImpact = 1f;
+
 
     private Transform tt;
     private Rigidbody rb;
-    private float Lift;
+    public float Lift;
+    public List<float> RecentLift;
+    public float LiftGravModifier;
+    public float VelGravModifier;
     private Vector3 Direction;
     private Vector3 LocalVelocity;
+
+    public float lift;
     private void Awake()
     {
         tt = transform;
@@ -26,27 +34,41 @@ public class LiftMovement : MonoBehaviour
     private float CalculateLift(float velocity)
     {
         // https://www.grc.nasa.gov/www/K-12/airplane/lifteq.html
+        //
         //     Cl * ( p * V^2 )                / 2 * A
-        return 1 * (1 * Mathf.Pow(velocity, 2)) / 2 * 1;
+        //return 1 * (1 * Mathf.Pow(velocity, 2)) / 2 * 1;
+
+        return Mathf.Pow(velocity, 5f / 6f) * 3;
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        Lift = CalculateLift(rb.velocity.magnitude);
+        //LiftGravModifier = 1- Mathf.Abs(1 - (Vector3.Angle(Vector3.down, tt.forward) / 90));
+        LiftGravModifier = Mathf.Clamp(Vector3.Angle(Vector3.up, tt.forward)-25, 0, 110) / 110;
+        RecentLift.Add(CalculateLift(rb.velocity.magnitude * LiftGravModifier));
+        while (RecentLift.Count > 60) RecentLift.RemoveAt(0);
+        Lift = RecentLift.Average();
+
         Debug.Log("Velocity: " + rb.velocity.magnitude + " Lift: " + Lift);
         LocalVelocity = Vector3.zero;
 
-        LocalVelocity.y = Lift * LiftMultiplier;
-        LocalVelocity.z = Lift * ForwardLiftMultiplier;
-        LocalVelocity = Vector3.Lerp(rb.velocity - rb.velocity * 0.1f * Time.deltaTime,
-            LocalVelocity.x * tt.right + LocalVelocity.y * tt.up + LocalVelocity.z * tt.forward,
-            0.2f * Time.deltaTime);
+        LocalVelocity.y = Lift * UpwardLiftRatio;
+        LocalVelocity.z = Lift * ForwardLiftRatio;
+        LocalVelocity = LocalVelocity.normalized * Lift * LiftMultiplier;
 
 
-        //rb.velocity = LocalVelocity;
+        VelGravModifier = 1 - (Mathf.Clamp(Vector3.Angle(Vector3.down, tt.forward), 0, 90) / 90);
 
-        tt.position = new Vector3(0, 50, 0);
+        LocalVelocity = tt.rotation * LocalVelocity;
+
+        LocalVelocity = Vector3.Lerp(rb.velocity - rb.velocity * 0.2f * Time.deltaTime,
+            LocalVelocity,
+            5f * Time.deltaTime) + Physics.gravity * rb.mass * (VelGravModifier * GravModifierImpact);
+
+        rb.velocity = LocalVelocity;
+
+        //tt.position = new Vector3(0, 50, 0);
 
     }
 
@@ -64,8 +86,8 @@ public class LiftMovement : MonoBehaviour
         Gizmos.DrawLine(rb.position, rb.position + avg * 5);
 
 
-        LocalVelocity.y = Lift * LiftMultiplier;
-        LocalVelocity.z = Lift * ForwardLiftMultiplier;
+        LocalVelocity.y = Lift * UpwardLiftRatio;
+        LocalVelocity.z = Lift * ForwardLiftRatio;
         LocalVelocity = Vector3.Lerp(rb.velocity, LocalVelocity, 0.2f);
         LocalVelocity = tt.localRotation * LocalVelocity;
 
@@ -74,8 +96,8 @@ public class LiftMovement : MonoBehaviour
 
         Gizmos.color = Color.red;
         Vector3 avg2 = Vector3.zero;
-        recentVelocitys.ForEach(x => avg2 += x);
-        avg2 = avg2 / recentVelocitys.Count;
+        recentLocalVel.ForEach(x => avg2 += x);
+        avg2 = (avg2 / recentLocalVel.Count);
         Gizmos.DrawLine(rb.position, rb.position + avg2 * 5);
     }
 

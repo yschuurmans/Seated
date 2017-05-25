@@ -48,6 +48,7 @@ public class InputManager : MonoBehaviour
         transform.Rotate(new Vector3(state.ThumbSticks.Right.Y, 0, 0));
         transform.Rotate(new Vector3(0, state.ThumbSticks.Left.X, 0));
 
+        if(prevState.Buttons.A == ButtonState.Pressed && state.Buttons.A == ButtonState.Released) flyObject.AddForce(transform.forward * 10);
     }
 
     
