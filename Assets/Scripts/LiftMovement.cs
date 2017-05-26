@@ -13,10 +13,10 @@ public class LiftMovement : MonoBehaviour
 
     private Transform tt;
     private Rigidbody rb;
-    public float Lift;
-    public List<float> RecentLift;
-    public float LiftGravModifier;
-    public float VelGravModifier;
+    private float Lift;
+    private List<float> RecentLift;
+    private float LiftGravModifier;
+    private float VelGravModifier;
     private Vector3 Direction;
     private Vector3 LocalVelocity;
 
@@ -25,6 +25,8 @@ public class LiftMovement : MonoBehaviour
     {
         tt = transform;
         rb = GetComponent<Rigidbody>();
+
+        RecentLift = new List<float>();
     }
     // Use this for initialization
     void Start()
@@ -38,14 +40,14 @@ public class LiftMovement : MonoBehaviour
         //     Cl * ( p * V^2 )                / 2 * A
         //return 1 * (1 * Mathf.Pow(velocity, 2)) / 2 * 1;
 
-        return Mathf.Pow(velocity, 5f / 6f) * 3;
+        return Mathf.Clamp(Mathf.Pow(velocity, 5f / 6f) * 3,0, 4*velocity);
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
         //LiftGravModifier = 1- Mathf.Abs(1 - (Vector3.Angle(Vector3.down, tt.forward) / 90));
-        LiftGravModifier = Mathf.Clamp(Vector3.Angle(Vector3.up, tt.forward)-25, 0, 110) / 110;
+        LiftGravModifier = Mathf.Clamp01(0.2f+ Mathf.Clamp(Vector3.Angle(Vector3.up, tt.forward)-45, 0, 130) / 130);
         RecentLift.Add(CalculateLift(rb.velocity.magnitude * LiftGravModifier));
         while (RecentLift.Count > 60) RecentLift.RemoveAt(0);
         Lift = RecentLift.Average();
