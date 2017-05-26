@@ -5,26 +5,22 @@ using UnityEngine;
 
 public class AirStream : MonoBehaviour
 {
-    private const int _NotifyMultiplyer = 5;
+    private const int _AlertMultiplyer = 7;
     public float thickness;
     public Transform startPoint;
     public Transform endPoint;
+    
 
-    public static AirStream Instance;
-
-    public const float _MaxNotifyForcePerc = 70;
+    public const float _MaxAlertForcePerc = 40;
+    public const float _MinAlertForcePerc = 20;
     public Vector3 closestPointOnLineTemp;
     public float force;
-    public float radius;
     private List<ContactPoint> contactPointsHit = new List<ContactPoint>();
     private List<ContactPoint> knownContactPoints = new List<ContactPoint>();
 
     // Use this for initialization
     void Start()
     {
-        if (Instance != null)
-            Destroy(gameObject);
-        Instance = this;
     }
 
 
@@ -40,20 +36,22 @@ public class AirStream : MonoBehaviour
                 //deltaflyer is in the airStream
                 addForce(df, closestPoint);
             }
-            else if (dist < (thickness * _NotifyMultiplyer))
+            else if (dist < (thickness * _AlertMultiplyer))
             {
                 //Deltaflyer is near the airStream
-                noticePlayer(df, closestPoint);
+                alertPlayer(df, closestPoint);
             }
         }
     }
+   
 
-    void noticePlayer(DeltaFlyer df, Vector3 closestPointOnLine)
+    void alertPlayer(DeltaFlyer df, Vector3 closestPointOnLine)
     {
 
         ContactPoint[] points = df.contactPoints;
         ContactPoint closestPoint = points.OrderBy(p => Vector3.Distance(p.transform.position, closestPointOnLine)).FirstOrDefault();
-        float minDist = Vector3.Distance(closestPoint.transform.position, closestPointOnLine);
+
+        if (!knownContactPoints.Contains(closestPoint)) knownContactPoints.Add(closestPoint);
 
         //foreach (ContactPoint c in points)
         //{
@@ -68,12 +66,12 @@ public class AirStream : MonoBehaviour
         //|*******|--------------------*--------)
 
         float dist = Vector3.Distance(closestPoint.transform.position, closestPointOnLine) - thickness;
-        float range = thickness * _NotifyMultiplyer - thickness;
+        float range = thickness * _AlertMultiplyer - thickness;
         float perc = 100 - (dist / (range / 100));
-        float maxForce = force * (_MaxNotifyForcePerc / 100);
+        float maxForce = force * ((_MaxAlertForcePerc - _MinAlertForcePerc) / 100);
+        float beginForce = force * (_MinAlertForcePerc / 100);
 
-
-        closestPoint.force = maxForce * (perc / 100);
+        closestPoint.force = maxForce * (perc / 100) + beginForce;
 
         foreach (ContactPoint cp in knownContactPoints)
         {
@@ -82,7 +80,8 @@ public class AirStream : MonoBehaviour
                 cp.force = 0;
             }
         }
-        //closestPoint.force = (force / (thickness * _NotifyMultiplyer * Vector3.Distance(closestPoint.transform.position, closestPointOnLine)));
+
+        //closestPoint.force = (force / (thickness * _AlertMultiplyer * Vector3.Distance(closestPoint.transform.position, closestPointOnLine)));
     }
 
 
@@ -101,8 +100,11 @@ public class AirStream : MonoBehaviour
         {
             contactPointsHit.Add(c);
 
+
+
+
             float range = thickness;
-            float dist = range - maxDist;
+            float dist = range - Vector3.Distance(c.transform.position, closestPoint); 
             if (dist < 0) continue;
             float perc = (dist / (range / 100));
             //|****-**|----------------------------)
@@ -112,16 +114,20 @@ public class AirStream : MonoBehaviour
             //in 100% you have to deal 70% of the force + 30%
             //you are in 25% so you have to deal 70/4 of the force + 30%
 
-            float maxForce = force * ((100 - _MaxNotifyForcePerc) / 100);
-            float extraForce = force * (_MaxNotifyForcePerc / 100);
+            float tempForce = (force - (force / maxDist * Vector3.Distance(c.transform.position, closestPoint))) * 10;
+            float maxForce = tempForce * ((100 - _MaxAlertForcePerc) / 100);
+            float extraForce = tempForce * (_MaxAlertForcePerc / 100);
 
             float ringForce = maxForce * (perc / 100);
             float totalForce = ringForce + extraForce;
             c.force = totalForce;
+            //c.force = force - (force / maxDist * Vector3.Distance(c.transform.position, closestPoint));
+
+            //c.force = totalForce;
 
 
 
-            //c.force = (((perc/100) * (100 - _MaxNotifyForcePerc) / 100) * force) + ((_MaxNotifyForcePerc / 100) * force);
+            //c.force = (((perc/100) * (100 - _MaxAlertForcePerc) / 100) * force) + ((_MaxAlertForcePerc / 100) * force);
             // c.force = force - (force / maxDist * Vector3.Distance(c.transform.position, closestPoint));
             if (!knownContactPoints.Contains(c)) knownContactPoints.Add(c);
         }
@@ -166,11 +172,9 @@ public class AirStream : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(startPoint.position, thickness);
-        Gizmos.DrawWireSphere(endPoint.position, thickness);
+        Gizmos.DrawWireSphere(closestPointOnLineTemp, thickness);
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(startPoint.position, thickness * _NotifyMultiplyer);
-        Gizmos.DrawWireSphere(endPoint.position, thickness * _NotifyMultiplyer);
+        Gizmos.DrawWireSphere(closestPointOnLineTemp, thickness * _AlertMultiplyer);
         Gizmos.color = Color.red;
         if (closestPointOnLineTemp != Vector3.zero)
             Gizmos.DrawSphere(closestPointOnLineTemp, 0.3f);

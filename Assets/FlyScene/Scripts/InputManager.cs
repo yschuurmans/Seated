@@ -38,12 +38,40 @@ public class InputManager : MonoBehaviour
         state = GamePad.GetState(playerIndex);
         Movement();
         UserInputs();
-        flyObject.AddForce(transform.forward * velocity);
+        //transform.position += transform.forward * velocity;
+        //flyObject.AddForce(transform.forward * velocity);
     }
 
     
     void Movement()
     {
+        if (Input.GetKey(KeyCode.W))
+        {
+            transform.position += transform.forward * velocity;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            transform.position -= transform.forward * velocity;
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            transform.Rotate(new Vector3(0, 1, 0));
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            transform.Rotate(new Vector3(0, -1, 0));
+        }
+        if (Input.GetKey(KeyCode.Space))
+        {
+            transform.position += Vector3.up * velocity;
+        }
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            transform.position += Vector3.down * velocity;
+        }
+
+
+
         transform.Rotate(new Vector3(0, 0, -state.ThumbSticks.Right.X));
         transform.Rotate(new Vector3(state.ThumbSticks.Right.Y, 0, 0));
         transform.Rotate(new Vector3(0, state.ThumbSticks.Left.X, 0));
