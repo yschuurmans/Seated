@@ -13,7 +13,7 @@ namespace Assets.TestScene.Scripts
         public int ID;
         public ushort[,] StretchMatrix;
         public List<RaptorInput> ActiveInputs;
-
+        public BoxCollider raptorCollider;
         public ContactPoint[] contactPoints;
 
 
