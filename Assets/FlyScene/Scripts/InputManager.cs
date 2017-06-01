@@ -81,7 +81,8 @@ public class InputManager : MonoBehaviour
 
         if(prevState.Buttons.A == ButtonState.Pressed && (state.Buttons.A == ButtonState.Released || state.Buttons.A == ButtonState.Pressed)) flyObject.AddForce(transform.forward * 100 * Time.deltaTime);
         if (prevState.Buttons.X == ButtonState.Pressed && (state.Buttons.X == ButtonState.Released || state.Buttons.X == ButtonState.Pressed)) flyObject.AddForce(transform.forward * 2000 * Time.deltaTime);
-
+        if (state.Triggers.Right > 0.05f)
+            flyObject.AddForce(transform.forward * state.Triggers.Right * 2000 * Time.deltaTime);
     }
 
 
