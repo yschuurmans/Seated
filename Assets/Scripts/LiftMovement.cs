@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LiftMovement : MonoBehaviour
 {
+    public Text velText;
     public float LiftMultiplier = 0.75f;
     public float UpwardLiftRatio = 1f;
     public float ForwardLiftRatio = 3f;
@@ -40,36 +42,50 @@ public class LiftMovement : MonoBehaviour
         //     Cl * ( p * V^2 )                / 2 * A
         //return 1 * (1 * Mathf.Pow(velocity, 2)) / 2 * 1;
 
-        return Mathf.Clamp(Mathf.Pow(velocity, 5f / 6f) * 3, 0, 4 * velocity);
+        return Mathf.Clamp(Mathf.Pow(velocity, 4f / 6f) * 3, velocity / 2, 8 * velocity);
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
         //LiftGravModifier = 1- Mathf.Abs(1 - (Vector3.Angle(Vector3.down, tt.forward) / 90));
-        LiftGravModifier = Mathf.Clamp01(0.2f + Mathf.Clamp(Vector3.Angle(Vector3.up, tt.forward) - 45, 0, 130) / 130);
-        RecentLift.Add(CalculateLift(rb.velocity.magnitude * LiftGravModifier));
-        //RecentLift.Add((CalculateLift(rb.velocity.magnitude * LiftGravModifier) + Lift) / 2);
-        while (RecentLift.Count > 60) RecentLift.RemoveAt(0);
-        Lift = RecentLift.Average();
+
+        //RecentLift.Add(CalculateLift(rb.velocity.magnitude * LiftGravModifier));
+        ////RecentLift.Add((CalculateLift(rb.velocity.magnitude * LiftGravModifier) + Lift) / 2);
+        //while (RecentLift.Count > 60) RecentLift.RemoveAt(0);
+        //Lift = RecentLift.Average();
+
+
+
+
+        LiftGravModifier = Mathf.Clamp01(0.2f + Mathf.Clamp(Vector3.Angle(Vector3.up, tt.forward), 0, 70) / 70);
+
+        Lift = CalculateLift(rb.velocity.magnitude * LiftGravModifier);
+
 
         LocalVelocity = Vector3.zero;
 
-        LocalVelocity.y = Lift * UpwardLiftRatio;
-        LocalVelocity.z = Lift * ForwardLiftRatio;
+        LocalVelocity.y = UpwardLiftRatio;
+        LocalVelocity.z = ForwardLiftRatio;
         LocalVelocity = LocalVelocity.normalized * Lift * LiftMultiplier;
 
         float downwardAngle = Vector3.Angle(Vector3.down, tt.forward);
 
-        VelGravModifier = 1 - (Mathf.Clamp(downwardAngle, 0, 90) / 90);
+        VelGravModifier = (Mathf.Clamp(downwardAngle, 0, 90) / 90);
 
         LocalVelocity = tt.rotation * LocalVelocity;
 
-        LocalVelocity = Vector3.Lerp(rb.velocity - rb.velocity * 0.2f * Time.deltaTime,
+        LocalVelocity = Vector3.Lerp(
+            rb.velocity - rb.velocity * 0.002f /** Time.fixedDeltaTime*/,
             LocalVelocity,
-            Lift / 20 * 5 * Time.deltaTime) + Physics.gravity * rb.mass * (VelGravModifier * GravModifierImpact);
+            5 * Time.fixedDeltaTime) 
+            + Physics.gravity * rb.mass * (VelGravModifier * GravModifierImpact);
 
         rb.velocity = LocalVelocity;
+
+
+
+
 
         //tt.position = new Vector3(0, 50, 0);
 
@@ -82,11 +98,15 @@ public class LiftMovement : MonoBehaviour
             tt.rotation = Quaternion.Lerp(tt.rotation, Quaternion.Euler(0, tt.eulerAngles.y, tt.eulerAngles.z), (1 - angleX / PitchResistance) * Time.deltaTime);
             tt.rotation = Quaternion.Lerp(tt.rotation, Quaternion.Euler(tt.eulerAngles.x, tt.eulerAngles.y, 0), (1 - angleZ / RollResistance) * Time.deltaTime);
         }
-        else if (angleX > PitchResistance && angleZ > 180 - RollResistance)
+        else if (angleX > 180 - PitchResistance && angleZ > 180 - RollResistance)
         {
             tt.rotation = Quaternion.Lerp(tt.rotation, Quaternion.Euler(180, tt.eulerAngles.y, tt.eulerAngles.z), (1 - angleX / PitchResistance) * Time.deltaTime);
             tt.rotation = Quaternion.Lerp(tt.rotation, Quaternion.Euler(tt.eulerAngles.x, tt.eulerAngles.y, 180), (1 - angleZ / RollResistance) * Time.deltaTime);
         }
+
+
+
+        velText.text = "Lift: " + Lift.ToString("F1") + "\nSpeed: " + rb.velocity.magnitude.ToString("F1") + "\nHeight: " + tt.position.y.ToString("F1") + "\nAngle: " + angleX.ToString("F1");
     }
 
     private List<Vector3> recentVelocitys = new List<Vector3>();
