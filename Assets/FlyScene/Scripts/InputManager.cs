@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
+    public static float instance;
+
+    public float turnRate;
     public float velocity;
     private Rigidbody flyObject;
     bool playerIndexSet = false;
@@ -18,7 +21,7 @@ public class InputManager : MonoBehaviour
         flyObject = GetComponent<Rigidbody>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (!playerIndexSet || !prevState.IsConnected)
         {
@@ -70,16 +73,18 @@ public class InputManager : MonoBehaviour
             transform.position += Vector3.down * velocity;
         }
 
+        flyObject.angularVelocity = Vector3.Lerp(flyObject.angularVelocity, Vector3.zero, 0.1f);
 
-
-        transform.Rotate(new Vector3(0, 0, -state.ThumbSticks.Right.X));
-        transform.Rotate(new Vector3(state.ThumbSticks.Right.Y, 0, 0));
-        transform.Rotate(new Vector3(0, state.ThumbSticks.Left.X, 0));
+        //transform.Rotate(new Vector3(0, 0, -state.ThumbSticks.Right.X));
+        transform.Rotate(new Vector3(state.ThumbSticks.Right.Y, state.ThumbSticks.Left.X, -state.ThumbSticks.Right.X));
+        //transform.Rotate(new Vector3(0, state.ThumbSticks.Left.X, 0));
 
         if(prevState.Buttons.A == ButtonState.Pressed && (state.Buttons.A == ButtonState.Released || state.Buttons.A == ButtonState.Pressed)) flyObject.AddForce(transform.forward * 100 * Time.deltaTime);
+        if (prevState.Buttons.X == ButtonState.Pressed && (state.Buttons.X == ButtonState.Released || state.Buttons.X == ButtonState.Pressed)) flyObject.AddForce(transform.forward * 2000 * Time.deltaTime);
+
     }
 
-    
+
     void UserInputs()
     {
         if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed)
