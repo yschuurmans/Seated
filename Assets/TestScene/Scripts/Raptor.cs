@@ -13,14 +13,14 @@ namespace Assets.TestScene.Scripts
         public int ID;
         public ushort[,] StretchMatrix;
         public List<RaptorInput> ActiveInputs;
-
+        public BoxCollider raptorCollider;
         public ContactPoint[] contactPoints;
 
-        
+
 
         void Start()
         {
-            
+
             rb = GetComponent<Rigidbody>();
             RaptorInput.OnInputChanged += OnInputChanged;
             contactPoints = GetComponentsInChildren<ContactPoint>();
@@ -36,7 +36,7 @@ namespace Assets.TestScene.Scripts
         {
             int maxRow = 0;
             int maxColumn = 0;
-             foreach (ContactPoint cp in contactPoints)
+            foreach (ContactPoint cp in contactPoints)
             {
                 if (cp.row > maxRow) maxRow = cp.row;
                 if (cp.column > maxColumn) maxColumn = cp.column;
@@ -47,14 +47,9 @@ namespace Assets.TestScene.Scripts
 
         private void UpdateMatrix()
         {
-            for(int i = 0; i<2; i++)
-            {
-                Debug.Log(i + " | " + contactPoints.Where(c => c.column == i).Average(c => c.force));
-            }
-            
+
             foreach (ContactPoint cp in contactPoints)
             {
-                
                 StretchMatrix[cp.row, cp.column] = cp.GetForce;
             }
         }

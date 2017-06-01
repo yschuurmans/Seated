@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
+    public static float instance;
+
+    public float turnRate;
     public float velocity;
     private Rigidbody flyObject;
     bool playerIndexSet = false;
@@ -18,7 +21,7 @@ public class InputManager : MonoBehaviour
         flyObject = GetComponent<Rigidbody>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (!playerIndexSet || !prevState.IsConnected)
         {
@@ -38,19 +41,51 @@ public class InputManager : MonoBehaviour
         state = GamePad.GetState(playerIndex);
         Movement();
         UserInputs();
-        flyObject.AddForce(transform.forward * velocity);
+        //transform.position += transform.forward * velocity;
+        //flyObject.AddForce(transform.forward * velocity);
     }
 
     
     void Movement()
     {
-        transform.Rotate(new Vector3(0, 0, -state.ThumbSticks.Right.X));
-        transform.Rotate(new Vector3(state.ThumbSticks.Right.Y, 0, 0));
-        transform.Rotate(new Vector3(0, state.ThumbSticks.Left.X, 0));
+        if (Input.GetKey(KeyCode.W))
+        {
+            transform.position += transform.forward * velocity;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            transform.position -= transform.forward * velocity;
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            transform.Rotate(new Vector3(0, 1, 0));
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            transform.Rotate(new Vector3(0, -1, 0));
+        }
+        if (Input.GetKey(KeyCode.Space))
+        {
+            transform.position += Vector3.up * velocity;
+        }
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            transform.position += Vector3.down * velocity;
+        }
 
+        flyObject.angularVelocity = Vector3.Lerp(flyObject.angularVelocity, Vector3.zero, 0.1f);
+
+        //transform.Rotate(new Vector3(0, 0, -state.ThumbSticks.Right.X));
+        transform.Rotate(new Vector3(state.ThumbSticks.Right.Y, state.ThumbSticks.Left.X, -state.ThumbSticks.Right.X));
+        //transform.Rotate(new Vector3(0, state.ThumbSticks.Left.X, 0));
+
+        if(prevState.Buttons.A == ButtonState.Pressed && (state.Buttons.A == ButtonState.Released || state.Buttons.A == ButtonState.Pressed)) flyObject.AddForce(transform.forward * 100 * Time.deltaTime);
+        if (prevState.Buttons.X == ButtonState.Pressed && (state.Buttons.X == ButtonState.Released || state.Buttons.X == ButtonState.Pressed)) flyObject.AddForce(transform.forward * 2000 * Time.deltaTime);
+        if (state.Triggers.Right > 0.05f)
+            flyObject.AddForce(transform.forward * state.Triggers.Right * 2000 * Time.deltaTime);
     }
 
-    
+
     void UserInputs()
     {
         if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed)

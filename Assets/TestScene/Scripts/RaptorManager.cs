@@ -116,7 +116,7 @@ public class RaptorManager : MonoBehaviour
         // This event fires for each connected Raptus seperately. It can fire multiple times after OnReady,
         // or when a Raptus is plugged in later. The first parameter will always contain a Raptus.Device
         // instance that details its ID and capabilities.
-
+        
         this.raptorID = raptus.ID;
         Capabilities = raptus.Capabilities;
 
