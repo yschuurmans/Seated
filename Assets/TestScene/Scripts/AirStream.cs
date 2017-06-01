@@ -9,18 +9,22 @@ public class AirStream : MonoBehaviour
     public float thickness;
     public Transform startPoint;
     public Transform endPoint;
-    
+
 
     public const float _MaxAlertForcePerc = 40;
-    public const float _MinAlertForcePerc = 20;
+    public const float _MinAlertForcePerc = 5;
     public Vector3 closestPointOnLineTemp;
     public float force;
     private List<ContactPoint> contactPointsHit = new List<ContactPoint>();
     private List<ContactPoint> knownContactPoints = new List<ContactPoint>();
 
 
+    private float minImpactRadius = 1f;
+    private float maxImpactRadius = 1.6f;
+
     //gizmos variables
-    public float impactRadius = 1;
+    public bool alwaysDrawGizmos;
+    public float impactRadius;
     Vector3 gizClosesImpactPoint;
 
     // Use this for initialization
@@ -40,7 +44,7 @@ public class AirStream : MonoBehaviour
             {
                 //deltaflyer is in the airStream
                 addForce(df, closestPoint);
-                if(df.currentAirStream != this)
+                if (df.currentAirStream != this)
                 {
                     df.currentAirStream = this;
                 }
@@ -50,22 +54,30 @@ public class AirStream : MonoBehaviour
                 //Deltaflyer is near the airStream
                 alertPlayer(df, closestPoint);
             }
-            else if(df.currentAirStream == this && dist > thickness)
+            else if (df.currentAirStream == this && dist > thickness)
             {
                 df.currentAirStream = null;
-            }        
+            }
 
         }
     }
-   
+
 
     void alertPlayer(DeltaFlyer df, Vector3 closestPointOnLine)
     {
-        Vector3 closestImpactPoint = df.raptor.raptorCollider.ClosestPointOnBounds(closestPointOnLine);
+        //Vector3 closestImpactPoint = df.raptor.raptorCollider.ClosestPointOnBounds(closestPointOnLine);
+        RaycastHit hit;
+        //Vector3 heading = closestPointOnLine - df.raptor.raptorCollider.center;
+        //float distance = heading.magnitude;
+        Vector3 direction = (df.raptor.raptorCollider.transform.position - closestPointOnLine).normalized;
+        Ray ray = new Ray(closestPointOnLine, direction);
+        Physics.Raycast(ray, out hit);
+        Vector3 closestImpactPoint = hit.point;
         gizClosesImpactPoint = closestImpactPoint;
-        //float dist = Vector3.Distance(closestPointOnLine, closestImpactPoint) - thickness;
-        //float range = thickness * _AlertMultiplyer - thickness;
-        //float distPerc = (dist / (range / 100)) / 100;
+
+        float dist = Vector3.Distance(closestPointOnLine, closestImpactPoint) - thickness;
+        float range = thickness * _AlertMultiplyer - thickness;
+        float distPerc = (100 - (dist / (range / 100))) / 100;
 
         //ContactPoint closestPoint = df.contactPoints.OrderBy(p => Vector3.Distance(p.transform.position, closestPointOnLine)).FirstOrDefault();
         //ContactPoint furthestPoint = df.contactPoints.OrderByDescending(p => Vector3.Distance(p.transform.position, closestPointOnLine)).FirstOrDefault();
@@ -73,9 +85,24 @@ public class AirStream : MonoBehaviour
         //float minRadius = Vector3.Distance(closestImpactPoint, closestPoint.transform.position);
         //float maxRadius = Vector3.Distance(closestImpactPoint, furthestPoint.transform.position);
         //float radiusRange = (maxRadius - minRadius) + minRadius;
+        float radiusRange = maxImpactRadius - minImpactRadius;
 
-        //float radius = radiusRange * distPerc;
-        //impactRadius = radius;
+        float radius = (radiusRange * distPerc) + minImpactRadius;
+        impactRadius = radius;
+
+
+        List<ContactPoint> points = df.contactPoints.Where(p => Vector3.Distance(p.transform.position, closestImpactPoint) <= radius).ToList();
+
+        foreach (ContactPoint c in points)
+        {
+
+            //float impactDist = Vector3.Distance(c.transform.position, closestImpactPoint);
+            //float impactRange = radius;
+            //float impactDistPerc = (100 - (impactDist / (impactRange / 100))) / 100;
+            //c.force = force * impactDistPerc;
+            c.force = getForce(c.transform.position, closestImpactPoint, _MinAlertForcePerc, radius);
+        }
+
 
 
 
@@ -120,6 +147,19 @@ public class AirStream : MonoBehaviour
         //closestPoint.force = (force / (thickness * _AlertMultiplyer * Vector3.Distance(closestPoint.transform.position, closestPointOnLine)));
     }
 
+    public float getForce(Vector3 objectPos, Vector3 closestPointOnLine, float minForcePerc, float range)
+    {
+        float dist = Vector3.Distance(objectPos, closestPointOnLine);
+        float perc = (100 - (dist / (range / 100))) / 100;
+
+        float minForce = force * (minForcePerc / 100);
+        float tempForce = force - minForce;
+        float newForce = tempForce * perc;
+        float totalForce = newForce + minForce;
+
+        return totalForce;
+    }
+
 
     void addForce(DeltaFlyer df, Vector3 closestPoint)
     {
@@ -140,7 +180,7 @@ public class AirStream : MonoBehaviour
 
 
             float range = thickness;
-            float dist = range - Vector3.Distance(c.transform.position, closestPoint); 
+            float dist = range - Vector3.Distance(c.transform.position, closestPoint);
             if (dist < 0) continue;
             float perc = (dist / (range / 100));
             //|****-**|----------------------------)
@@ -149,7 +189,7 @@ public class AirStream : MonoBehaviour
             //perc = 25%
             //in 100% you have to deal 70% of the force + 30%
             //you are in 25% so you have to deal 70/4 of the force + 30%
-            
+
             //the force + extra force (so motors have a higher average force
             float tempTotalForce = force + force * (_MaxAlertForcePerc / 100);
             float tempForce = (tempTotalForce - (tempTotalForce / maxDist * Vector3.Distance(c.transform.position, closestPoint))) * 10;
@@ -215,18 +255,22 @@ public class AirStream : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(startPoint.position, endPoint.position);
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(closestPointOnLineTemp, thickness);
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(closestPointOnLineTemp, thickness * _AlertMultiplyer);
-        Gizmos.color = Color.red;
-        if (closestPointOnLineTemp != Vector3.zero)
-            Gizmos.DrawSphere(closestPointOnLineTemp, 0.3f);
+        if (GameManager.instance.flyers[0] == null ||
+            Vector3.Distance(GameManager.instance.flyers[0].transform.position, closestPointOnLineTemp) <= thickness || alwaysDrawGizmos)
+        {
 
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(gizClosesImpactPoint, impactRadius);
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(startPoint.position, endPoint.position);
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(closestPointOnLineTemp, thickness);
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(closestPointOnLineTemp, thickness * _AlertMultiplyer);
+            Gizmos.color = Color.red;
+            if (closestPointOnLineTemp != Vector3.zero)
+                Gizmos.DrawSphere(closestPointOnLineTemp, 0.3f);
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(gizClosesImpactPoint, impactRadius);
+        }
         //foreach (var cp in contactPointsHit)
         //{
         //    if (cp != null)
