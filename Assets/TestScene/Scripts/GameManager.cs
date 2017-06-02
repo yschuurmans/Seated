@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
     public List<DeltaFlyer> flyers = new List<DeltaFlyer>();
-
     public static GameManager instance;
 
 
