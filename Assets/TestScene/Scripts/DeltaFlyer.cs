@@ -11,10 +11,13 @@ public class DeltaFlyer : MonoBehaviour
     public AirStream currentAirStream;
     public AirStream detectedAirStream;
     public ParticleSystem ps;
+    InputManager inputMngr;
 
     private Transform movingDirection;
 
-
+    private AirStream particleStream;
+    public List<AirStream> detectedAirStreams = new List<AirStream>();
+    List<ParticleSystem> psPool = new List<ParticleSystem>();
 
     private float minImpactRadius = 0.8f;
     private float maxImpactRadius = 1.3f;
@@ -22,6 +25,8 @@ public class DeltaFlyer : MonoBehaviour
     //gizmos variables
     public float impactRadius;
     Vector3 gizClosesImpactPoint;
+    public Vector3 tmpPoint;
+    public Vector3 tmpClostestPoint;
 
     /// <summary>
     /// Whether this Deltaflyer is or is not in an Airstream
@@ -37,8 +42,20 @@ public class DeltaFlyer : MonoBehaviour
         }
     }
 
+    public bool isInDetectionRange
+    {
+        get
+        {
+            if (detectedAirStream == null)
+                return false;
+            else
+                return true;
+        }
+    }
+
     void Awake()
     {
+        inputMngr = GetComponent<InputManager>();
         ps = GetComponentInChildren<ParticleSystem>();
         raptor = GetComponentInChildren<Raptor>();
     }
@@ -56,10 +73,8 @@ public class DeltaFlyer : MonoBehaviour
     }
     void LateUpdate()
     {
-        if (currentAirStream != null) ps.transform.position = currentAirStream.getClosestPoint(this);
-        ps.gameObject.transform.LookAt(movingDirection);
-        ps.transform.Rotate(0, 180, 0);
-        if (currentAirStream != null) ps.transform.position = ps.transform.position + ps.transform.forward * -150;
+        updateParticleSystem();
+        //if (currentAirStream != null) placeParticleSystem(currentAirStream, movingDirection, currentAirStream.getClosestPoint(this), ps);
     }
 
     public void resetMotors()
@@ -70,20 +85,6 @@ public class DeltaFlyer : MonoBehaviour
         }
     }
 
-
-    public void enableSpeed(Transform movingDirection)
-    {
-        this.movingDirection = movingDirection;
-        var em = ps.emission;
-        em.enabled = true;
-    }
-
-    public void disableSpeed()
-    {
-        movingDirection = null;
-        var em = ps.emission;
-        em.enabled = false;
-    }
 
     /// <summary>
     /// Action when Deltaflyer detects an Airstream
@@ -124,7 +125,8 @@ public class DeltaFlyer : MonoBehaviour
     /// <param name="closestPoint"></param>
     public void inAirstream(Vector3 closestPoint)
     {
-        resetMotors();
+        movingDirection = currentAirStream.getMovingToPoint(this);
+        //resetMotors();
     }
 
     public float getForce(float force, Vector3 objectPos, Vector3 closestPointOnLine, float minForcePerc, float range)
@@ -140,11 +142,152 @@ public class DeltaFlyer : MonoBehaviour
         return totalForce;
     }
 
+    /// <summary>
+    /// Frame when Deltaflyer entered an airstream
+    /// </summary>
+    /// <param name="movingDirection"></param>
+    public void enteredAirstream(AirStream stream)
+    {
+        Debug.Log("Entering an airstream: " + stream.ToString());
+        currentAirStream = stream;
+        particleStream = stream;
+
+        inputMngr.velocity *= 2;
+
+        this.movingDirection = stream.getMovingToPoint(this);
+        var em = ps.emission;
+        em.enabled = true;
+
+        foreach (ContactPoint cp in contactPoints)
+        {
+            cp.force = 40;
+        }
+
+        //foreach (AirStream tmpAs in detectedAirStreams)
+        //{
+        //    tmpAs.notifyParticles.gameObject.SetActive(true);
+        //}
+    }
+
+    /// <summary>
+    /// Frame when Deltaflyer left an airstream
+    /// </summary>
+    public void leftAirstream()
+    {
+        Debug.Log("Leaving an airstream: " + currentAirStream.ToString());
+        currentAirStream = null;
+
+        inputMngr.velocity /= 2;
+
+        movingDirection = null;
+        var em = ps.emission;
+        em.enabled = false;
+
+        //foreach (AirStream tmpAs in detectedAirStreams)
+        //{
+        //    tmpAs.notifyParticles.gameObject.SetActive(false);
+        //}
+
+    }
+
+    public void enteredDetectionRange(AirStream stream)
+    {
+        detectedAirStream = stream;
+    }
+
+    public void leftDetectionRange(AirStream stream)
+    {
+        if (detectedAirStreams.Contains(detectedAirStream)) detectedAirStream = null;
+        else detectedAirStreams.Remove(stream);
+        if (!isInAirstream) resetMotors();
+    }
+
+    public void addMovingDirection(AirStream stream)
+    {
+        if (!detectedAirStreams.Contains(stream))
+        {
+            //ParticleSystem sys = getParticleSystem();
+            Transform movDir = stream.getOtherPoint(movingDirection);
+            //stream.notifyParticles = sys;
+            detectedAirStreams.Add(stream);
+        }
+    }
+
+    void updateParticleSystem()
+    {
+        if (movingDirection != null)
+        {
+            if (Vector3.Distance(ps.transform.position, movingDirection.transform.position) < 5)
+            {
+                if (detectedAirStreams[0] != null)
+                {
+                    particleStream = detectedAirStreams[0];
+                    movingDirection = particleStream.getOtherPoint(movingDirection);
+                }
+            }
+
+
+            if (particleStream != null)
+            {
+
+                ps.transform.position = currentAirStream.getClosestPoint(transform.position);
+                ps.gameObject.transform.LookAt(movingDirection);
+                ps.transform.Rotate(0, 180, 0);
+                Vector3 point = ps.transform.position + ps.transform.forward * -150;
+
+                tmpPoint = point;
+
+
+                ps.transform.position = particleStream.getClosestPoint(point);
+                tmpClostestPoint = ps.transform.position;
+
+                if (particleStream == currentAirStream) ps.gameObject.transform.LookAt(movingDirection);
+                else ps.gameObject.transform.LookAt(particleStream.getOtherPoint(movingDirection));
+
+                ps.transform.Rotate(0, 180, 0);
+
+                //ps.transform.position += ps.transform.forward * -150;
+            }
+        }
+    }
+
+    private ParticleSystem getParticleSystem()
+    {
+        foreach (ParticleSystem sys in psPool)
+        {
+            if (!sys.gameObject.activeSelf)
+            {
+                sys.gameObject.SetActive(true);
+                return sys;
+            }
+        }
+
+        ParticleSystem newSys = Instantiate<ParticleSystem>(ps);
+        psPool.Add(newSys);
+        newSys.gameObject.SetActive(true);
+        return newSys;
+    }
+
 
     void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(gizClosesImpactPoint, impactRadius);
+        if (currentAirStream != null)
+        {
+            Vector3 tempClosestPointOnLine = currentAirStream.getClosestPoint(transform.position);
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(tempClosestPointOnLine, currentAirStream.thickness);
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(tempClosestPointOnLine, currentAirStream.thickness * currentAirStream._AlertMultiplyer);
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(tempClosestPointOnLine, 0.3f);
+        }
+
+        Gizmos.color = Color.black;
+        Gizmos.DrawSphere(tmpClostestPoint, 1f);
+        Gizmos.color = Color.white;
+        Gizmos.DrawSphere(tmpPoint, 1f);
     }
 
 
