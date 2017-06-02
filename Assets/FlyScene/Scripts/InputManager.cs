@@ -19,6 +19,7 @@ public class InputManager : MonoBehaviour
     void Start()
     {
         flyObject = GetComponent<Rigidbody>();
+        flyObject.velocity = Vector3.zero;
     }
 
     void FixedUpdate()
@@ -73,7 +74,7 @@ public class InputManager : MonoBehaviour
             transform.position += Vector3.down * velocity;
         }
 
-        flyObject.angularVelocity = Vector3.Lerp(flyObject.angularVelocity, Vector3.zero, 0.1f);
+        //flyObject.angularVelocity = Vector3.Lerp(flyObject.angularVelocity, Vector3.zero, 0.1f);
 
         //transform.Rotate(new Vector3(0, 0, -state.ThumbSticks.Right.X));
         transform.Rotate(new Vector3(state.ThumbSticks.Right.Y, state.ThumbSticks.Left.X, -state.ThumbSticks.Right.X));
