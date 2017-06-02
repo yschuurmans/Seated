@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Classes;
+using UnityEngine;
 
 public class TimeChallenge : Challenge {
     /// <summary>
@@ -6,7 +7,7 @@ public class TimeChallenge : Challenge {
     /// </summary>
     private int _time;
 
-    public TimeChallenge(string name, string description, Vector3 startLocation, Vector3 location, int time) : base(name, description, startLocation, location)
+    public TimeChallenge(string name, string description, Location startLocation, Location location, int time) : base(name, description, startLocation, location)
     {
         _time = time;
     }

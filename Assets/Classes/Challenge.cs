@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using Assets.Classes;
+using UnityEngine;
 
-public abstract class Challenge
+public abstract class Challenge 
 {
     /// <summary>
     /// name of the challenge
@@ -13,11 +14,11 @@ public abstract class Challenge
     /// <summary>
     /// start location of challenge
     /// </summary>
-    private Vector3 _startLocation;
+    private Location _startLocation;
     /// <summary>
     /// location where the location takes place
     /// </summary>
-    private Vector3 _location;
+    private Location _location;
     /// <summary>
     /// standard false
     /// </summary>
@@ -29,7 +30,7 @@ public abstract class Challenge
     /// </summary>
     /// <param name="name"></param>
     /// <param name="description"></param>
-    public Challenge(string name, string description, Vector3 startLocation, Vector3 location)
+    public Challenge(string name, string description, Location startLocation, Location location)
     {
         _name = name;
         _description = description;
