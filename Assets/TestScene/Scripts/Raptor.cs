@@ -16,8 +16,6 @@ namespace Assets.TestScene.Scripts
         public BoxCollider raptorCollider;
         public ContactPoint[] contactPoints;
 
-
-
         void Start()
         {
 
