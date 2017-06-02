@@ -6,19 +6,11 @@ public abstract class Challenge : MonoBehaviour
     /// <summary>
     /// name of the challenge
     /// </summary>
-    private string _name;
+    public string name;
     /// <summary>
     /// description of the challenge 
     /// </summary>
-    private string _description;
-    /// <summary>
-    /// start location of challenge
-    /// </summary>
-    private Location _startLocation;
-    /// <summary>
-    /// location where the location takes place
-    /// </summary>
-    private Location _location;
+    public string description;
     /// <summary>
     /// standard false
     /// </summary>
