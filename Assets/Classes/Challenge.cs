@@ -1,7 +1,7 @@
 ﻿using Assets.Classes;
 using UnityEngine;
 
-public abstract class Challenge 
+public abstract class Challenge : MonoBehaviour
 {
     /// <summary>
     /// name of the challenge
@@ -23,21 +23,6 @@ public abstract class Challenge
     /// standard false
     /// </summary>
     private bool _completed;
-
-
-    /// <summary>
-    /// Constructor of the challenge class
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="description"></param>
-    public Challenge(string name, string description, Location startLocation, Location location)
-    {
-        _name = name;
-        _description = description;
-        _startLocation = startLocation;
-        _location = location;
-        _completed = false;
-    }
 
     public void CompleteChallenge()
     {
