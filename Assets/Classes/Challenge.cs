@@ -1,46 +1,80 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Assets.Classes;
+using UnityEngine;
 
-public abstract class Challenge
+public abstract class Challenge : MonoBehaviour
 {
     /// <summary>
     /// name of the challenge
     /// </summary>
-    private string _name;
+    public string name;
     /// <summary>
     /// description of the challenge 
     /// </summary>
-    private string _description;
+    public string description;
     /// <summary>
-    /// start location of challenge
+    /// List of IDs of participating players
     /// </summary>
-    private Vector3 _startLocation;
-    /// <summary>
-    /// location where the location takes place
-    /// </summary>
-    private Vector3 _location;
-    /// <summary>
-    /// standard false
-    /// </summary>
-    private bool _completed;
-
+    protected List<Participant> _participants;
 
     /// <summary>
-    /// Constructor of the challenge class
+    /// Locations for the challenge with sequence index as key, e.g. 1: Start, 2: Checkpoint1, 3: Finish
     /// </summary>
-    /// <param name="name"></param>
-    /// <param name="description"></param>
-    public Challenge(string name, string description, Vector3 startLocation, Vector3 location)
+    [SerializeField]
+    protected Dictionary<int, Location> LocationsInOrder;
+
+    void Awake()
     {
-        _name = name;
-        _description = description;
-        _startLocation = startLocation;
-        _location = location;
-        _completed = false;
+        LocationsInOrder = GetComponentsInChildren<Location>().OrderBy(l=>l.SequenceIndex).ToDictionary(l=>l.SequenceIndex);
     }
 
-    public void CompleteChallenge()
+    protected virtual void Start()
     {
-        _completed = true;
+        if (LocationsInOrder != null)
+        {
+            //LocationsInOrder.ForEach(l=>l.OnPlayerEntered+=OnPlayerEnteredLocation);
+        }
+        
+    }
+
+    private void OnPlayerEnteredLocation(int playerID, Location location)
+    {
+        //Is player participating in the challenge?
+        if (_participants.All(p => p.PlayerId != playerID))
+            return;
+
+        Participant participant = _participants.First(p => p.PlayerId == playerID);
+
+        //Is this the current goal of the player?
+        if (participant.CurrentGoal != location)
+            return;
+
+        participant.LastVisitedLocation = participant.CurrentGoal;
+        //participant.CurrentGoal = Locations.
+
+    }
+
+    public void CompleteChallenge(int playerId)
+    {
+        foreach (Participant p in _participants)
+        {
+            if (p.PlayerId == playerId)
+            {
+                p.CompletedChallenges.Add(this);
+            }
+        }
+    }
+
+    public struct Participant
+    {
+        public int PlayerId;
+        public float TimeElapsed;
+        public Location LastVisitedLocation;
+        public Location CurrentGoal;
+        public List<Challenge> CompletedChallenges;
+
     }
 }
 
