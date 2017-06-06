@@ -150,6 +150,7 @@ public class DeltaFlyer : MonoBehaviour
     {
         Debug.Log("Entering an airstream: " + stream.ToString());
         currentAirStream = stream;
+        detectedAirStream = stream;
         particleStream = stream;
 
         inputMngr.velocity *= 2;
