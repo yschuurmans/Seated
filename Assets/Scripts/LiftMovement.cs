@@ -92,8 +92,8 @@ public class LiftMovement : MonoBehaviour
 
         //float width = WingPoints.RightWingTip.position.x - WingPoints.LeftWingTip.position.x;
         //float length = WingPoints.FrontWingTip.position.z - WingPoints.BackCenter.position.z;
-
-        return (width * length / 2) * AreaMultiplier;
+        float area = (width * length / 2) / (dWidth * dLength);
+        return Mathf.Lerp(0.1f, 1f, area) + AreaMultiplier;
     }
 
     // Update is called once per frame
@@ -116,7 +116,7 @@ public class LiftMovement : MonoBehaviour
 
 
         float angle = Mathf.Clamp((Vector3.Angle(tt.up, rb.velocity) / 90f - 1f)*2, -1f, 1f);
-        LocalVelocity = angle * tt.up * Lift;
+        LocalVelocity = (angle * tt.up) * Lift;
 
         //LocalVelocity = tt.up * Lift;
 
