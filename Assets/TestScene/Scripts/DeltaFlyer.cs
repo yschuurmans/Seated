@@ -7,17 +7,14 @@ using UnityEngine;
 public class DeltaFlyer : MonoBehaviour
 {
     public Raptor raptor;
+    
     public ContactPoint[] contactPoints { get { return raptor.contactPoints; } }
     public AirStream currentAirStream;
+    //only one airstream can be detect at a time
+    //thats why theres 1 detectedairstream + a list of detectedairstreams
     public AirStream detectedAirStream;
-    public ParticleSystem ps;
-    InputManager inputMngr;
-
-    private Transform movingDirection;
-
-    private AirStream particleStream;
     public List<AirStream> detectedAirStreams = new List<AirStream>();
-    List<ParticleSystem> psPool = new List<ParticleSystem>();
+    InputManager inputMngr;   
 
     private float minImpactRadius = 0.8f;
     private float maxImpactRadius = 1.3f;
@@ -27,6 +24,10 @@ public class DeltaFlyer : MonoBehaviour
     Vector3 gizClosesImpactPoint;
     public Vector3 tmpPoint;
     public Vector3 tmpClostestPoint;
+
+
+    //testVariables
+    public int detectedAirstreamsCount = 0;
 
     /// <summary>
     /// Whether this Deltaflyer is or is not in an Airstream
@@ -56,7 +57,6 @@ public class DeltaFlyer : MonoBehaviour
     void Awake()
     {
         inputMngr = GetComponent<InputManager>();
-        ps = GetComponentInChildren<ParticleSystem>();
         raptor = GetComponentInChildren<Raptor>();
     }
 
@@ -73,7 +73,6 @@ public class DeltaFlyer : MonoBehaviour
     }
     void LateUpdate()
     {
-        updateParticleSystem();
         //if (currentAirStream != null) placeParticleSystem(currentAirStream, movingDirection, currentAirStream.getClosestPoint(this), ps);
     }
 
@@ -125,7 +124,6 @@ public class DeltaFlyer : MonoBehaviour
     /// <param name="closestPoint"></param>
     public void inAirstream(Vector3 closestPoint)
     {
-        movingDirection = currentAirStream.getMovingToPoint(this);
         //resetMotors();
     }
 
@@ -148,16 +146,19 @@ public class DeltaFlyer : MonoBehaviour
     /// <param name="movingDirection"></param>
     public void enteredAirstream(AirStream stream)
     {
-        Debug.Log("Entering an airstream: " + stream.ToString());
+        Debug.Log("entered an airstream");
+        stream.inAirstream.Add(this);
         currentAirStream = stream;
         detectedAirStream = stream;
-        particleStream = stream;
 
-        inputMngr.velocity *= 2;
+        Transform movingDir = stream.getMovingToPoint(this);
+        foreach (AirStream tempStream in detectedAirStreams)
+        {
+            tempStream.enterParticleStream(this, stream.getOtherPoint(movingDir));
+        }
+        detectedAirStream.enterParticleStream(this, movingDir);
 
-        this.movingDirection = stream.getMovingToPoint(this);
-        var em = ps.emission;
-        em.enabled = true;
+        inputMngr.velocity *= 2;        
 
         foreach (ContactPoint cp in contactPoints)
         {
@@ -175,14 +176,16 @@ public class DeltaFlyer : MonoBehaviour
     /// </summary>
     public void leftAirstream()
     {
-        Debug.Log("Leaving an airstream: " + currentAirStream.ToString());
+        foreach(AirStream stream in detectedAirStreams)
+        {
+            stream.leaveParticleStream(this);
+        }
+
+        currentAirStream.leaveParticleStream(this);
+        currentAirStream.inAirstream.Remove(this);
         currentAirStream = null;
 
         inputMngr.velocity /= 2;
-
-        movingDirection = null;
-        var em = ps.emission;
-        em.enabled = false;
 
         //foreach (AirStream tmpAs in detectedAirStreams)
         //{
@@ -193,82 +196,48 @@ public class DeltaFlyer : MonoBehaviour
 
     public void enteredDetectionRange(AirStream stream)
     {
-        detectedAirStream = stream;
-    }
+
+        if (!isInDetectionRange)
+        {
+            Debug.Log("user is not in detection range yet, so entering detection range");
+            detectedAirStream = stream;
+        }
+        else if (!isInAirstream && detectedAirStream != stream)
+        {
+            if (stream.isClostestAirstream(this, stream, detectedAirStream))
+            {
+                Debug.Log("user detected an airstream that is closest. user is not in an airstream");
+                detectedAirStream = stream;
+            }
+            else
+            {
+                Debug.Log("user detected an airstream but it is NOT closest. user is not in an airstream");
+            }
+        }
+        if (isInAirstream && !detectedAirStreams.Contains(stream))
+        {
+            Debug.Log("user is in an airstream and detected by another airstream");
+            stream.enterParticleStream(this, stream.getOtherPoint(detectedAirStream.ps.transform));
+        }
+
+        detectedAirStreams.Add(stream);
+        stream.inDetectionRange.Add(this);
+        Debug.Log("Airstream entered, count: " + detectedAirStreams.Count);
+        
+        detectedAirstreamsCount++;
+}
 
     public void leftDetectionRange(AirStream stream)
     {
-        if (detectedAirStreams.Contains(detectedAirStream)) detectedAirStream = null;
-        else detectedAirStreams.Remove(stream);
-        if (!isInAirstream) resetMotors();
+        if (!isInAirstream) { resetMotors(); }
+        if (detectedAirStream == stream) { detectedAirStream = null; }
+        detectedAirStreams.Remove(stream);
+        stream.inDetectionRange.Remove(this);
+        stream.leaveParticleStream(this);
+        Debug.Log("Airstream left, count: " + detectedAirStreams.Count);
+        
+        detectedAirstreamsCount--;
     }
-
-    public void addMovingDirection(AirStream stream)
-    {
-        if (!detectedAirStreams.Contains(stream))
-        {
-            //ParticleSystem sys = getParticleSystem();
-            Transform movDir = stream.getOtherPoint(movingDirection);
-            //stream.notifyParticles = sys;
-            detectedAirStreams.Add(stream);
-        }
-    }
-
-    void updateParticleSystem()
-    {
-        if (movingDirection != null)
-        {
-            if (Vector3.Distance(ps.transform.position, movingDirection.transform.position) < 5)
-            {
-                if (detectedAirStreams[0] != null)
-                {
-                    particleStream = detectedAirStreams[0];
-                    movingDirection = particleStream.getOtherPoint(movingDirection);
-                }
-            }
-
-
-            if (particleStream != null)
-            {
-
-                ps.transform.position = currentAirStream.getClosestPoint(transform.position);
-                ps.gameObject.transform.LookAt(movingDirection);
-                ps.transform.Rotate(0, 180, 0);
-                Vector3 point = ps.transform.position + ps.transform.forward * -150;
-
-                tmpPoint = point;
-
-
-                ps.transform.position = particleStream.getClosestPoint(point);
-                tmpClostestPoint = ps.transform.position;
-
-                if (particleStream == currentAirStream) ps.gameObject.transform.LookAt(movingDirection);
-                else ps.gameObject.transform.LookAt(particleStream.getOtherPoint(movingDirection));
-
-                ps.transform.Rotate(0, 180, 0);
-
-                //ps.transform.position += ps.transform.forward * -150;
-            }
-        }
-    }
-
-    private ParticleSystem getParticleSystem()
-    {
-        foreach (ParticleSystem sys in psPool)
-        {
-            if (!sys.gameObject.activeSelf)
-            {
-                sys.gameObject.SetActive(true);
-                return sys;
-            }
-        }
-
-        ParticleSystem newSys = Instantiate<ParticleSystem>(ps);
-        psPool.Add(newSys);
-        newSys.gameObject.SetActive(true);
-        return newSys;
-    }
-
 
     void OnDrawGizmos()
     {
