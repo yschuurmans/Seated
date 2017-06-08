@@ -256,6 +256,7 @@ MonoBehaviour:
   impactRadius: 0
   tmpPoint: {x: 0, y: 0, z: 0}
   tmpClostestPoint: {x: 0, y: 0, z: 0}
+  detectedAirstreamsCount: 0
 --- !u!54 &243295908
 Rigidbody:
   m_ObjectHideFlags: 0

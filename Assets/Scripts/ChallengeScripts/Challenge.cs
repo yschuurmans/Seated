@@ -57,6 +57,7 @@ public abstract class Challenge : MonoBehaviour
     public void SubmitParticipant(PlayerChallengeModule participant)
     {
         ParticipantStatus.Add(participant, false);
+        Debug.Log("Player " + participant.DeltaFlyer.raptor.ID + " is now participating in a challenge");
     }
 
     public void StartChallenge()
@@ -66,7 +67,7 @@ public abstract class Challenge : MonoBehaviour
         ParticipantStatus.Keys.ToList().ForEach(p =>
         {
             p.OnPlayerCompletedChallenge += OnPlayerCompletedChallenge;
-            StartCoroutine(p.StartChallenge(this));
+            p.StartChallenge(this);
         });
     }
 
