@@ -16,6 +16,9 @@ public abstract class Challenge : MonoBehaviour
     /// </summary>
     private bool _completed;
 
+    /// <summary>
+    /// setting the value to complete the challenge
+    /// </summary>
     public void CompleteChallenge()
     {
         _completed = true;
