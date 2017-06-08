@@ -196,20 +196,6 @@ public class AirStream : MonoBehaviour
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     //void addForce()
     //{
     //    if (isActive)
