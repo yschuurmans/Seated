@@ -111,24 +111,20 @@ public class LiftMovement : MonoBehaviour
         Area = CalculateFrontalWingArea(avg * 5);
 
         Velocity = rb.velocity.magnitude;
-        Lift = CalculateLift(Velocity, Area);
+        Lift = CalculateLift(transform.InverseTransformDirection(rb.velocity).z, Area);
 
 
-        LocalVelocity = tt.up * Lift;
-        //if (Vector3.Angle(tt.up, rb.velocity)+30 > Vector3.Angle(-1 * tt.up, rb.velocity))
-        //{
-        //    LocalVelocity = tt.up * Lift;
-        //}
-        //else
-        //{
-        //    LocalVelocity = -1 * tt.up * Lift;
-        //}
+
+        float angle = Mathf.Clamp((Vector3.Angle(tt.up, rb.velocity) / 90f - 1f)*2, -1f, 1f);
+        LocalVelocity = angle * tt.up * Lift;
+
+        //LocalVelocity = tt.up * Lift;
 
         //LocalVelocity = rb.velocity.normalized*-1 * Lift;
 
         //LocalVelocity = tt.rotation * LocalVelocity;
         rb.AddForce(LocalVelocity);
-        rb.AddForce(tt.forward * (Velocity - VelocityLastFrame));
+        //rb.AddForce(tt.forward * (Velocity - VelocityLastFrame));
 
 
 
@@ -178,18 +174,7 @@ public class LiftMovement : MonoBehaviour
         Gizmos.color = Color.green;
         Gizmos.DrawLine(rb.position, rb.position + LocalVelocity);
 
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(
-            new Vector3(Wings.Left.position.x, tt.position.y - 2, Wings.Left.position.z),
-            new Vector3(Wings.Back.position.x, tt.position.y - 2, Wings.Back.position.z));
-        Gizmos.DrawLine(
-            new Vector3(Wings.Back.position.x, tt.position.y - 2, Wings.Back.position.z),
-            new Vector3(Wings.Right.position.x, tt.position.y - 2, Wings.Right.position.z));
-        Gizmos.DrawLine(
-            new Vector3(Wings.Right.position.x, tt.position.y - 2, Wings.Right.position.z),
-            new Vector3(Wings.Front.position.x, tt.position.y - 2, Wings.Front.position.z));
-        Gizmos.DrawLine(
-            new Vector3(Wings.Front.position.x, tt.position.y - 2, Wings.Front.position.z),
-            new Vector3(Wings.Left.position.x, tt.position.y - 2, Wings.Left.position.z));
+        //Gizmos.color = Color.blue;
+        //Gizmos.DrawLine(rb.position, rb.position + transform.InverseTransformDirection(rb.velocity));
     }
 }
