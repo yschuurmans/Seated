@@ -710,7 +710,7 @@ BoxCollider:
   m_GameObject: {fileID: 664174578}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1.39, y: 0.74, z: 1.13}
   m_Center: {x: 0, y: 0.21, z: 0.13}
@@ -1209,6 +1209,24 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1132568775}
+--- !u!1 &1161308676 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 100032, guid: fd30b0d1cc844ff41b5495e42f3ff4b6, type: 3}
+  m_PrefabInternal: {fileID: 2078347482}
+--- !u!64 &1161308680
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1161308676}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Convex: 1
+  m_InflateMesh: 0
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300024, guid: fd30b0d1cc844ff41b5495e42f3ff4b6, type: 3}
 --- !u!1 &1284914923
 GameObject:
   m_ObjectHideFlags: 0
@@ -1265,9 +1283,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   velText: {fileID: 1132568777}
   LiftMultiplier: 1
-  AreaMultiplier: 1
-  AirDensity: 0.05
-  Coefficient: 0.5
+  AreaMultiplier: 3
+  AirDensity: 1.2
+  Coefficient: 0.7
   Lift: 0
   Area: 0.01
   Wings:
@@ -1282,8 +1300,8 @@ Rigidbody:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1284914923}
   serializedVersion: 2
-  m_Mass: 0.1
-  m_Drag: 0
+  m_Mass: 1
+  m_Drag: 0.05
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -4620,6 +4638,34 @@ ParticleSystem:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
+--- !u!1 &1913191000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1913191001}
+  m_Layer: 0
+  m_Name: Challenge
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1913191001
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1913191000}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -31.520773, y: 2.5467148, z: 25.225159}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 16
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1993140083
 GameObject:
   m_ObjectHideFlags: 0
@@ -4751,6 +4797,10 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: fd30b0d1cc844ff41b5495e42f3ff4b6, type: 3}
       propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300010, guid: fd30b0d1cc844ff41b5495e42f3ff4b6, type: 3}
+      propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

@@ -18,6 +18,8 @@ public class AirStream : MonoBehaviour
     private List<ContactPoint> contactPointsHit = new List<ContactPoint>();
     private List<ContactPoint> knownContactPoints = new List<ContactPoint>();
 
+    public ParticleSystem notifyParticles;
+
 
 
     public bool alwaysDrawGizmos;
@@ -35,64 +37,124 @@ public class AirStream : MonoBehaviour
         {
             Vector3 closestPoint = ClosestPointOnLine(startPoint.position, endPoint.position, df.transform.position);
             float dist = Vector3.Distance(closestPoint, df.transform.position);
-            if (dist < thickness)
+
+            if (df.currentAirStream == this && dist > thickness)
             {
-                //deltaflyer is in the airStream
-                df.inAirstream(closestPoint);
-                if (df.currentAirStream != this)
+                //leaving this AirStream
+                df.leftAirstream();
+            }
+            else if (df.detectedAirStream == this && dist > (thickness * _AlertMultiplyer))
+            {
+                //leaving this Detection Range
+                df.leftDetectionRange(this);
+            }
+            else if (dist < thickness)
+            {
+                if (!df.isInAirstream || (df.currentAirStream != this && !isClostestAirstream(df, this, df.currentAirStream)))
                 {
-                    //entering Airstream
-                    df.enableSpeed(getMovingToPoint(df));
-                    df.currentAirStream = this;
+                    if (df.currentAirStream != null)
+                    {
+                        //Entering this airstream, makes the deltaflyer leave the other airstream
+                        df.leftAirstream();
+                    }
+
+                    //entering this Airstream
+                    df.enteredAirstream(this);
+                }
+
+                if (df.currentAirStream == this)
+                {
+                    //deltaflyer is in this airStream
+                    //Action done when this Deltaflyer is in This airstream
+                    df.inAirstream(closestPoint);
                 }
             }
             else if (dist < (thickness * _AlertMultiplyer) && !df.isInAirstream)
             {
-                if (df.detectedAirStream != this)
+                if (!df.isInDetectionRange || (df.detectedAirStream != this && isClostestAirstream(df, this, df.detectedAirStream)))
                 {
-                    //entering DetectionRange   
+                    if (df.currentAirStream != null)
+                    {
+                        //Entering this DetectionRange, makes the deltaflyer leave the detectionRange
+                        df.leftDetectionRange(this);
+                    }
+
+                    //entering this DetectionRange   
+                    df.enteredDetectionRange(this);
                 }
-                df.detectAirstream(this, closestPoint);
 
-                //Deltaflyer is near the airStream
+                if (df.detectedAirStream == this)
+                {
+                    //Deltaflyer is near this airStream
+                    //Action done when this Deltaflyer is near this airstream
+                    df.detectAirstream(this, closestPoint);
+                }
             }
-            else if (df.currentAirStream == this && dist > thickness)
+            else if (dist < (thickness * _AlertMultiplyer) && df.detectedAirStream != this && df.isInAirstream)
             {
-                //leaving AirStream
-                df.currentAirStream = null;
-                df.disableSpeed();
+                df.addMovingDirection(this);
             }
-            else if (df.detectedAirStream == this && dist > (thickness * _AlertMultiplyer))
+            else if (df.detectedAirStreams.Contains(this))
             {
-                //leaving Detection Range
-                df.detectedAirStream = null;
-                df.resetMotors();
+                df.leftDetectionRange(this);
             }
-
         }
     }
 
-    Transform getMovingToPoint(DeltaFlyer df)
+    public Transform getMovingToPoint(DeltaFlyer df)
     {
         float startAngle = Vector3.Angle(startPoint.position, df.transform.forward);
         float endAngle = Vector3.Angle(endPoint.position, df.transform.forward);
 
         if (startAngle < endAngle)
         {
-            Debug.Log("going to startpoint");
             return startPoint;
         }
         else
         {
-            Debug.Log("going to endpoint");
             return endPoint;
         }
     }
 
-    public Vector3 getClosestPoint(DeltaFlyer df)
+    public Transform getOtherPoint(Transform point)
     {
-        return ClosestPointOnLine(startPoint.position, endPoint.position, df.transform.position);
+        if(point.position == startPoint.position)
+        {
+            return endPoint;
+        }
+        else
+        {
+            return startPoint;
+        }
     }
+
+    public Vector3 getClosestPoint(Vector3 point)
+    {
+        return ClosestPointOnLine(this.startPoint.position, this.endPoint.position, point);
+    }
+
+    public Vector3 getClosestPoint(DeltaFlyer df, AirStream stream)
+    {
+        return ClosestPointOnLine(stream.startPoint.position, stream.endPoint.position, df.transform.position);
+    }
+
+    public float getDistOfClosestPoint(DeltaFlyer df, AirStream stream)
+    {
+        return Vector3.Distance(getClosestPoint(df, stream), df.transform.position);
+    }
+
+    public bool isClostestAirstream(DeltaFlyer df, AirStream CompareAirstream, AirStream CompareToAirstream)
+    {
+        if (getDistOfClosestPoint(df, CompareAirstream) < getDistOfClosestPoint(df, CompareToAirstream))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
 
     Vector3 ClosestPointOnLine(Vector3 vA, Vector3 vB, Vector3 vPoint)
     {
@@ -129,13 +191,7 @@ public class AirStream : MonoBehaviour
 
             Gizmos.color = Color.blue;
             Gizmos.DrawLine(startPoint.position, endPoint.position);
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(closestPointOnLineTemp, thickness);
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(closestPointOnLineTemp, thickness * _AlertMultiplyer);
-            Gizmos.color = Color.red;
-            if (closestPointOnLineTemp != Vector3.zero)
-                Gizmos.DrawSphere(closestPointOnLineTemp, 0.3f);
+           
         }
 
     }
