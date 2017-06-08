@@ -47,6 +47,7 @@ public class InputManager : MonoBehaviour
         transform.position += transform.forward * velocity;
         //transform.position += transform.forward * velocity;
         //flyObject.AddForce(transform.forward * velocity);
+        flyObject.angularVelocity = Vector3.Lerp(flyObject.angularVelocity, Vector3.zero, 0.9f);
     }
 
 
