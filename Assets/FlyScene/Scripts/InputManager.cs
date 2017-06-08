@@ -15,6 +15,8 @@ public class InputManager : MonoBehaviour
     GamePadState prevState;
     PlayerIndex playerIndex;
 
+
+
     // Use this for initialization
     void Start()
     {
@@ -104,53 +106,53 @@ public class InputManager : MonoBehaviour
     {
         if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed)
         {
-            Debug.Log("A pressed");
+            //Debug.Log("A pressed");
         }
         if (prevState.Buttons.B == ButtonState.Released && state.Buttons.B == ButtonState.Pressed)
         {
-            Debug.Log("B pressed");
+            //Debug.Log("B pressed");
         }
         if (prevState.Buttons.Y == ButtonState.Released && state.Buttons.Y == ButtonState.Pressed)
         {
-            Debug.Log("Y pressed");
+            //Debug.Log("Y pressed");
         }
         if (prevState.Buttons.X == ButtonState.Released && state.Buttons.X == ButtonState.Pressed)
         {
-            Debug.Log("X pressed");
+            //Debug.Log("X pressed");
         }
         if (prevState.Buttons.Start == ButtonState.Released && state.Buttons.Start == ButtonState.Pressed)
         {
-            Debug.Log("Start pressed");
+            //Debug.Log("Start pressed");
         }
         if (prevState.Buttons.Back == ButtonState.Released && state.Buttons.Back == ButtonState.Pressed)
         {
-            Debug.Log("Back pressed");
+            //Debug.Log("Back pressed");
         }
         if (prevState.Buttons.LeftStick == ButtonState.Released && state.Buttons.LeftStick == ButtonState.Pressed)
         {
-            Debug.Log("Left stick pressed");
+            //Debug.Log("Left stick pressed");
         }
         if (prevState.Buttons.RightStick == ButtonState.Released && state.Buttons.RightStick == ButtonState.Pressed)
         {
-            Debug.Log("Right stick pressed");
+            //Debug.Log("Right stick pressed");
         }
         if (prevState.Buttons.RightShoulder == ButtonState.Released && state.Buttons.RightShoulder == ButtonState.Pressed)
         {
-            Debug.Log("Right shoulder pressed");
+            //Debug.Log("Right shoulder pressed");
         }
         if (prevState.Buttons.LeftShoulder == ButtonState.Released && state.Buttons.LeftShoulder == ButtonState.Pressed)
         {
-            Debug.Log("Left shoulder pressed");
+            //Debug.Log("Left shoulder pressed");
         }
         if (state.Triggers.Left > 0)
         {
 
-            Debug.Log("Left trigger");
+            //Debug.Log("Left trigger");
         }
         if (state.Triggers.Right > 0)
         {
             Boost();
-            Debug.Log("Right trigger");
+            //Debug.Log("Right trigger");
         }
     }
 
