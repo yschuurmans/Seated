@@ -7,6 +7,7 @@ using UnityEngine;
 public class DeltaFlyer : MonoBehaviour
 {
     public Raptor raptor;
+    
     public ContactPoint[] contactPoints { get { return raptor.contactPoints; } }
     public AirStream currentAirStream;
     public AirStream detectedAirStream;
