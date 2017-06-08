@@ -42,7 +42,6 @@ public class ContactPoint : MonoBehaviour
     void OnDrawGizmos()
     {
         if (!Application.isPlaying) return;
-        float percentDistance = Mathf.Clamp01(Vector3.Distance(randomExplosion.Instance.transform.position, transform.position) / randomExplosion.Instance.radius);
 
         Gizmos.color = ColorHelper.GetLerpedColor(Color.red, Color.green, GetForce / ushort.MaxValue);
         Gizmos.DrawSphere(transform.position, 0.2f);

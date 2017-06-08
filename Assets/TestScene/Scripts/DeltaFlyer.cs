@@ -16,7 +16,7 @@ public class DeltaFlyer : MonoBehaviour
     InputManager inputMngr;   
 
     private float minImpactRadius = 0.8f;
-    private float maxImpactRadius = 1.3f;
+    private float maxImpactRadius = 1.5f;
 
     //gizmos variables
     public float impactRadius;
