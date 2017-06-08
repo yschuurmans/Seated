@@ -18,15 +18,29 @@ public class AirStream : MonoBehaviour
     private List<ContactPoint> contactPointsHit = new List<ContactPoint>();
     private List<ContactPoint> knownContactPoints = new List<ContactPoint>();
 
-    public ParticleSystem notifyParticles;
+    public ParticleSystem ps;
+
+    public List<DeltaFlyer> inAirstream = new List<DeltaFlyer>();
+    public List<DeltaFlyer> inDetectionRange = new List<DeltaFlyer>();
 
 
 
     public bool alwaysDrawGizmos;
 
+    void Awake()
+    {
+        ps = GetComponentInChildren<ParticleSystem>();
+        ps.Stop();
+    }
+
     // Use this for initialization
     void Start()
     {
+        startPoint.LookAt(endPoint);
+        startPoint.transform.Rotate(90, 0, 0);
+
+        endPoint.LookAt(startPoint);
+        endPoint.transform.Rotate(90, 0, 0);
     }
 
 
@@ -43,11 +57,11 @@ public class AirStream : MonoBehaviour
                 //leaving this AirStream
                 df.leftAirstream();
             }
-            else if (df.detectedAirStream == this && dist > (thickness * _AlertMultiplyer))
+            else if (df.detectedAirStreams.Contains(this) && dist > (thickness * _AlertMultiplyer))
             {
                 //leaving this Detection Range
                 df.leftDetectionRange(this);
-            }
+            }                
             else if (dist < thickness)
             {
                 if (!df.isInAirstream || (df.currentAirStream != this && !isClostestAirstream(df, this, df.currentAirStream)))
@@ -69,36 +83,43 @@ public class AirStream : MonoBehaviour
                     df.inAirstream(closestPoint);
                 }
             }
-            else if (dist < (thickness * _AlertMultiplyer) && !df.isInAirstream)
+            else if (dist < (thickness * _AlertMultiplyer))
             {
-                if (!df.isInDetectionRange || (df.detectedAirStream != this && isClostestAirstream(df, this, df.detectedAirStream)))
+               
+                if (!df.isInDetectionRange || !df.detectedAirStreams.Contains(this))
                 {
-                    if (df.currentAirStream != null)
-                    {
-                        //Entering this DetectionRange, makes the deltaflyer leave the detectionRange
-                        df.leftDetectionRange(this);
-                    }
+                    //if (df.currentAirStream != null)
+                    //{
+                    //    //Entering this DetectionRange, makes the deltaflyer leave the other detectionRange
+                    //    df.leftDetectionRange(this);
+                    //}
 
                     //entering this DetectionRange   
                     df.enteredDetectionRange(this);
                 }
 
-                if (df.detectedAirStream == this)
+                if (df.detectedAirStream == this && !df.isInAirstream)
                 {
                     //Deltaflyer is near this airStream
                     //Action done when this Deltaflyer is near this airstream
                     df.detectAirstream(this, closestPoint);
                 }
             }
-            else if (dist < (thickness * _AlertMultiplyer) && df.detectedAirStream != this && df.isInAirstream)
-            {
-                df.addMovingDirection(this);
-            }
-            else if (df.detectedAirStreams.Contains(this))
-            {
-                df.leftDetectionRange(this);
-            }
+              
+             
         }
+    }
+
+    public void enterParticleStream(DeltaFlyer df, Transform movingToPoint)
+    {
+        ps.transform.position = movingToPoint.position;
+        ps.transform.LookAt(getOtherPoint(movingToPoint));
+        ps.Play();
+    }
+
+    public void leaveParticleStream(DeltaFlyer df)
+    {
+        ps.Stop();
     }
 
     public Transform getMovingToPoint(DeltaFlyer df)
@@ -125,6 +146,18 @@ public class AirStream : MonoBehaviour
         else
         {
             return startPoint;
+        }
+    }
+
+    public Transform getPoint(Transform point)
+    {
+        if (point.position == startPoint.position)
+        {
+            return startPoint;
+        }
+        else
+        {
+            return endPoint;
         }
     }
 
@@ -188,7 +221,13 @@ public class AirStream : MonoBehaviour
         if (GameManager.instance.flyers[0] == null ||
             Vector3.Distance(GameManager.instance.flyers[0].transform.position, closestPointOnLineTemp) <= thickness || alwaysDrawGizmos)
         {
-
+            Vector3 tempClosestPointOnLine = startPoint.position;
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(tempClosestPointOnLine, thickness);
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(tempClosestPointOnLine, thickness * _AlertMultiplyer);
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(tempClosestPointOnLine, 0.3f);
             Gizmos.color = Color.blue;
             Gizmos.DrawLine(startPoint.position, endPoint.position);
            
