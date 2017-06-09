@@ -14,7 +14,6 @@ namespace Assets.Classes
 
         public LocationType Type;
         public int SequenceIndex;
-        public bool IsVisible = true;
         public GameObject WaypointMarker;
 
         private Collider trigger;
@@ -98,34 +97,9 @@ namespace Assets.Classes
             Gizmos.DrawSphere(trigger.bounds.center, trigger.bounds.size.x);
         }
 
-        private void OnBecameVisible()
-        {
-            if (Type == LocationType.Start)
-                return;
+       
 
-#if UNITY_EDITOR
-            if (Camera.current.name == "SceneCamera")
-            {
-                return;
-            }
-#endif
-            IsVisible = true;
-        }
-
-        private void OnBecameInvisible()
-        {
-            if (Type == LocationType.Start)
-                return;
-
-#if UNITY_EDITOR
-            if (Camera.current.name == "SceneCamera")
-            {
-                return;
-            }
-#endif
-
-            IsVisible = false;
-        }
+     
 
 
         public enum LocationType
