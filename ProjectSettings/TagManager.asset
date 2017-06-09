@@ -17,9 +17,9 @@ TagManager:
   - DeltaGlider
   - LocationTrigger
   - AirstreamParticleCollision
-  - 
-  - 
-  - 
+  - VisibleLocation
+  - InvisibleLocation
+  - StartLocations
   - 
   - 
   - 
