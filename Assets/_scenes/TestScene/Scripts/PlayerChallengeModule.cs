@@ -34,16 +34,13 @@ public class PlayerChallengeModule : MonoBehaviour
             if (_currentTargetLocation == value)
                 return;
 
-            //Hide old target location
-            if (_currentTargetLocation != null)
-                _currentTargetLocation.gameObject.layer = LayerMask.NameToLayer("InvisibleLocation");
-
+            if(_currentTargetLocation != null)
+                _currentTargetLocation.IsTargetLocation = false;
             //Assign new location as current
             _currentTargetLocation = value;
 
-            //Show new target location
             if (_currentTargetLocation != null)
-                _currentTargetLocation.gameObject.layer = LayerMask.NameToLayer("VisibleLocation");
+                _currentTargetLocation.IsTargetLocation = true;
         }
     }
 
