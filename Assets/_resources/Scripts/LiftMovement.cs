@@ -32,6 +32,7 @@ public class LiftMovement : MonoBehaviour
         public Transform Right;
         public Transform Front;
         public Transform Back;
+        
     }
 
 
