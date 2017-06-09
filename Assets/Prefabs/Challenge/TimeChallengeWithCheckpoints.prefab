@@ -63,7 +63,7 @@ GameObject:
   - component: {fileID: 114433643611673676}
   - component: {fileID: 114999963702147390}
   m_Layer: 14
-  m_Name: ChallengeStart 1
+  m_Name: TimeChallengeWithCheckpoints
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
