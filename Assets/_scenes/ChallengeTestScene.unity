@@ -249,10 +249,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   raptor: {fileID: 243295906}
-  Camera: {fileID: 805857680}
   currentAirStream: {fileID: 0}
   detectedAirStream: {fileID: 0}
   detectedAirStreams: []
+  minImpactRadius: 0.8
+  maxImpactRadius: 1.3
   impactRadius: 0
   tmpPoint: {x: 0, y: 0, z: 0}
   tmpClostestPoint: {x: 0, y: 0, z: 0}
@@ -509,7 +510,7 @@ GameObject:
   - component: {fileID: 532279802}
   - component: {fileID: 532279801}
   - component: {fileID: 532279800}
-  m_Layer: 12
+  m_Layer: 14
   m_Name: ChallengeStart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -678,7 +679,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294451199
+    m_Bits: 4294467583
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1215,10 +1216,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   raptor: {fileID: 1284914925}
-  Camera: {fileID: 805857680}
   currentAirStream: {fileID: 0}
   detectedAirStream: {fileID: 0}
   detectedAirStreams: []
+  minImpactRadius: 0.8
+  maxImpactRadius: 1.3
   impactRadius: 0
   tmpPoint: {x: 0, y: 0, z: 0}
   tmpClostestPoint: {x: 0, y: 0, z: 0}
