@@ -13,7 +13,7 @@ namespace Assets.TestScene.Scripts.HelperClasses
             if (targetCamera == null)
                 targetCamera = Camera.main;
 
-            Camera.main.cullingMask |= 1 << LayerMask.NameToLayer(layerName);
+            targetCamera.cullingMask |= 1 << LayerMask.NameToLayer(layerName);
         }
 
         public static void HideLayer(string layerName, Camera targetCamera = null)
@@ -21,7 +21,7 @@ namespace Assets.TestScene.Scripts.HelperClasses
             if (targetCamera == null)
                 targetCamera = Camera.main;
 
-            Camera.main.cullingMask &= ~(1 << LayerMask.NameToLayer(layerName));
+            targetCamera.cullingMask &= ~(1 << LayerMask.NameToLayer(layerName));
         }
 
         public static void ToggleLayer(string layerName, Camera targetCamera = null)
@@ -29,7 +29,7 @@ namespace Assets.TestScene.Scripts.HelperClasses
             if (targetCamera == null)
                 targetCamera = Camera.main;
 
-            Camera.main.cullingMask ^= 1 << LayerMask.NameToLayer(layerName);
+            targetCamera.cullingMask ^= 1 << LayerMask.NameToLayer(layerName);
         }
     }
 }
