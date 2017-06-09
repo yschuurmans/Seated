@@ -3,41 +3,104 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Classes;
+using Assets.TestScene.Scripts.HelperClasses;
 using UnityEngine;
 
 public class PlayerChallengeModule : MonoBehaviour
 {
     public DeltaFlyer DeltaFlyer;
-    public Dictionary<Challenge, float> CompletedChallengeResults;
-    public Challenge ActiveChallenge;
-    public Location CurrentTargetLocation;
 
+    //Completed challenges with fastest achieved time
+    public Dictionary<Challenge, float> CompletedChallengeResults = new Dictionary<Challenge, float>();
+
+    //Current Challenge Variables
+    public float StartTime;
+    private Location _currentTargetLocation;
+    private Challenge _activeChallenge;
+
+    //EventHandlers
     public delegate void PlayerCompletedChallenge(PlayerChallengeModule challengeModule);
     public PlayerCompletedChallenge OnPlayerCompletedChallenge = (challengeModule) => {};
 
-    public IEnumerator StartChallenge(Challenge challenge)
+    public Location CurrentTargetLocation
+    {
+        get
+        {
+            return _currentTargetLocation;
+        }
+        set
+        {
+            //Guard condition
+            if (_currentTargetLocation == value)
+                return;
+
+            //Hide old target location
+            if (_currentTargetLocation != null)
+                _currentTargetLocation.gameObject.layer = LayerMask.NameToLayer("InvisibleLocation");
+
+            //Assign new location as current
+            _currentTargetLocation = value;
+
+            //Show new target location
+            if (_currentTargetLocation != null)
+                _currentTargetLocation.gameObject.layer = LayerMask.NameToLayer("VisibleLocation");
+        }
+    }
+
+    //Challenge player is currently participating in
+    public Challenge ActiveChallenge
+    {
+        get
+        {
+            return _activeChallenge;
+        }
+        set
+        {
+            //Guard condition
+            if (_activeChallenge == value)
+                return;
+
+            //Make challenge start triggers visible to camera depending on if player is currently in a challenge
+            if (value == null)
+            {
+                CameraCullingMaskHelper.ShowLayer("ChallengeStart");
+                Camera.main.cullingMask |= 1 << LayerMask.NameToLayer("ChallengeStart");
+            }
+            else
+            {
+                CameraCullingMaskHelper.HideLayer("ChallengeStart");
+                Camera.main.cullingMask &= ~(1 << LayerMask.NameToLayer("ChallengeStart"));
+            }
+
+            _activeChallenge = value;
+        }
+    }
+
+    public void StartChallenge(Challenge challenge)
     {
         ActiveChallenge = challenge;
-        float startTime = Time.time;
-
+        StartTime = Time.time;
+        
+        //Entered starting location
         OnEnterLocation(challenge.LocationsInOrder.First().Value);
-        foreach (var locationEntry in ActiveChallenge.LocationsInOrder)
-        {
-            if (locationEntry.Value.Type == Location.LocationType.Finish) break;
-            yield return new WaitUntil(()=> locationEntry.Value.SequenceIndex != CurrentTargetLocation.SequenceIndex);
-        }
-        float elapsedTime = Time.time - startTime;
-        OnChallengeCompleted(elapsedTime);
     }
 
     public void OnEnterLocation(Location enteredLocation)
     {
-        if (CurrentTargetLocation != null && enteredLocation != CurrentTargetLocation) return;
+        if (ActiveChallenge == null || CurrentTargetLocation != null && enteredLocation != CurrentTargetLocation) return;
+        if (enteredLocation.Type == Location.LocationType.Finish)
+        {
+            OnChallengeCompleted();
+            CurrentTargetLocation = null;
+            return;
+        }
         CurrentTargetLocation = ActiveChallenge.LocationsInOrder.Values.FirstOrDefault(l=>l.SequenceIndex == enteredLocation.SequenceIndex + 1);
     }
 
-    public void OnChallengeCompleted(float elapsedTime)
+    public void OnChallengeCompleted()
     {
+        float elapsedTime = Time.time - StartTime;
+
         if (CompletedChallengeResults.ContainsKey(ActiveChallenge) &&
             CompletedChallengeResults[ActiveChallenge] > elapsedTime)
         {
