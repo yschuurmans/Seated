@@ -64,7 +64,7 @@ namespace Assets.Classes
         {
             while (ShowMarker)
             {
-                Vector3 pos = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, 0, 0));
+                Vector3 pos = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, 4, 0));
                 if (screenRect.Contains(pos))
                 {
                     if (pos.z >= 0)
@@ -76,7 +76,6 @@ namespace Assets.Classes
                 {
                     WaypointMarker.transform.position = GetMarkerPosition();
                 }
-                //WaypointMarker.transform.position = Camera.main.WorldToScreenPoint(GetMarkerPosition());
                 yield return null;
             }
         }
@@ -85,10 +84,6 @@ namespace Assets.Classes
         {
             Bounds bounds = new Bounds(screenRect.center, screenRect.size);
             return bounds.ClosestPoint(Camera.main.WorldToScreenPoint(transform.position));
-            //Camera.main.ViewportToWorldPoint(Vector3.zero);
-            //Bounds bounds = new Bounds(Camera.main.);
-            //Camera.main.
-            //return Vector3.zero;
         }
 
         void OnTriggerEnter(Collider other)
