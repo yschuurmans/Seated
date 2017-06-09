@@ -87,7 +87,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1862113176836604}
   m_LocalRotation: {x: -0.21850793, y: -0.6724986, z: 0.6724986, w: -0.21850793}
-  m_LocalPosition: {x: -205.4, y: 33, z: 376}
+  m_LocalPosition: {x: -230.9, y: 33, z: -3.7}
   m_LocalScale: {x: 10, y: 1, z: 10}
   m_Children: []
   m_Father: {fileID: 4916220899358078}
@@ -100,7 +100,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1343263989020066}
   m_LocalRotation: {x: 0.6724985, y: -0.21850802, z: 0.21850802, w: 0.6724985}
-  m_LocalPosition: {x: 57.9, y: 9.3, z: 24.6}
+  m_LocalPosition: {x: 60.9, y: 27.4, z: 0.9}
   m_LocalScale: {x: 10.00002, y: 1.0000007, z: 10.000004}
   m_Children: []
   m_Father: {fileID: 4916220899358078}
@@ -252,8 +252,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da5720be60e79514bac01fd647a98b4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _AlertMultiplyer: 10
-  thickness: 30
+  _AlertMultiplyer: 5
+  thickness: 20
   startPoint: {fileID: 4324025916133558}
   endPoint: {fileID: 4217865084303030}
   _MaxAlertForcePerc: 40

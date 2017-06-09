@@ -44,7 +44,7 @@ public class ContactPoint : MonoBehaviour
         if (!Application.isPlaying) return;
 
         Gizmos.color = ColorHelper.GetLerpedColor(Color.red, Color.green, GetForce / ushort.MaxValue);
-        Gizmos.DrawSphere(transform.position, 0.2f);
+        Gizmos.DrawSphere(transform.position, 0.02f);
     }
 
     public override string ToString()
