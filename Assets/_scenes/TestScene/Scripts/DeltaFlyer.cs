@@ -237,7 +237,6 @@ public class DeltaFlyer : MonoBehaviour
         detectedAirStreams.Remove(stream);
         stream.inDetectionRange.Remove(this);
         stream.leaveParticleStream(this);
-        Debug.Log("Airstream left, count: " + detectedAirStreams.Count);
         
         detectedAirstreamsCount--;
     }
