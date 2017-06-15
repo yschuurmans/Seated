@@ -73,6 +73,11 @@ public class PlayerChallengeModule : MonoBehaviour
         }
     }
 
+    void Awake()
+    {
+        DeltaFlyer = GetComponent<DeltaFlyer>();
+    }
+
     public void StartChallenge(Challenge challenge)
     {
         ActiveChallenge = challenge;
