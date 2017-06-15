@@ -16,10 +16,10 @@ TagManager:
   - RaptorCollider
   - DeltaGlider
   - LocationTrigger
-  - 
-  - 
-  - 
-  - 
+  - AirstreamParticleCollision
+  - VisibleLocation
+  - InvisibleLocation
+  - StartLocations
   - 
   - 
   - 
