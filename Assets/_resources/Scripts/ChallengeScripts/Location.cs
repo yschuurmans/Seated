@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections;
 using UnityEngine;
 
-namespace Assets.Classes
+namespace Assets._resources.Scripts.ChallengeScripts
 {
     public class Location : MonoBehaviour
     {
@@ -94,13 +90,9 @@ namespace Assets.Classes
 
         void OnDrawGizmos()
         {
+            if (!Application.isPlaying) return;
             Gizmos.DrawSphere(trigger.bounds.center, trigger.bounds.size.x);
         }
-
-       
-
-     
-
 
         public enum LocationType
         {

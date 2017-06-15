@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Classes;
 using Assets.TestScene.Scripts.HelperClasses;
+using Assets._resources.Scripts.ChallengeScripts;
 using UnityEngine;
 
 public class PlayerChallengeModule : MonoBehaviour
