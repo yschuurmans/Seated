@@ -24,6 +24,7 @@ public class SoundManager : MonoBehaviour
         ambienceSounds = gameObject.AddComponent<AudioSource>();
 
         ambienceSounds.loop = true;
+        
         ambienceSounds.clip = Ambience;
 
         ambienceSounds.volume = 0.6f;
