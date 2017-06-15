@@ -7,6 +7,7 @@ public class InputManager : MonoBehaviour
 {
     public static float instance;
 
+    public bool DebugHackies;
     public float turnRate;
     public float velocity;
     private Rigidbody flyObject;
@@ -96,27 +97,29 @@ public class InputManager : MonoBehaviour
         transform.Rotate(new Vector3(state.ThumbSticks.Right.Y, state.ThumbSticks.Left.X, -state.ThumbSticks.Right.X));
         //transform.Rotate(new Vector3(0, state.ThumbSticks.Left.X, 0));
 
-        if (prevState.Buttons.A == ButtonState.Pressed && (state.Buttons.A == ButtonState.Released || state.Buttons.A == ButtonState.Pressed)) flyObject.AddForce(transform.forward * 100 * Time.deltaTime);
-        if (prevState.Buttons.X == ButtonState.Pressed && (state.Buttons.X == ButtonState.Released || state.Buttons.X == ButtonState.Pressed)) flyObject.AddForce(transform.forward * 2000 * Time.deltaTime);
-        if (state.Triggers.Right > 0.05f)
-            flyObject.AddForce(transform.forward * state.Triggers.Right * 2000 * Time.deltaTime);
 
-        if (state.Triggers.Left > 0.05f)
-            flyObject.AddForce(transform.forward * state.Triggers.Left * -2000 * Time.deltaTime);
-
-        if (prevState.Buttons.Back == ButtonState.Pressed && state.Buttons.Back == ButtonState.Pressed &&
-            prevState.Buttons.Start == ButtonState.Pressed && state.Buttons.Start == ButtonState.Pressed)
+        if (DebugHackies)
         {
-            flyObject.rotation = Quaternion.identity;
-            flyObject.position = new Vector3(0, 200, 0);
-            flyObject.velocity = Vector3.zero;
-            flyObject.angularVelocity = Vector3.zero;
-            flyObject.freezeRotation = true;
-        }
-        else
-        {
+            if (state.Triggers.Right > 0.05f)
+                flyObject.AddForce(transform.forward * state.Triggers.Right * 5000 * Time.deltaTime);
 
-            flyObject.freezeRotation = false;
+            if (state.Triggers.Left > 0.05f)
+                flyObject.AddForce(transform.forward * state.Triggers.Left * -5000 * Time.deltaTime);
+
+            if (prevState.Buttons.Back == ButtonState.Pressed && state.Buttons.Back == ButtonState.Pressed &&
+                prevState.Buttons.Start == ButtonState.Pressed && state.Buttons.Start == ButtonState.Pressed)
+            {
+                flyObject.rotation = Quaternion.identity;
+                flyObject.position = new Vector3(0, 200, 0);
+                flyObject.velocity = Vector3.zero;
+                flyObject.angularVelocity = Vector3.zero;
+                flyObject.freezeRotation = true;
+            }
+            else
+            {
+
+                flyObject.freezeRotation = false;
+            }
         }
     }
 

@@ -74,12 +74,12 @@ public class LiftGlider : MonoBehaviour
 
         GravModifier = (forwardGravMod + downwardGravMod + liftGravMod * 2) / 4;
 
-        debugText2.text =
-            forwardGravMod + "\n" +
-            downwardGravMod + "\n" +
-            liftGravMod * 2 + "\n" +
-            "/4 = " + GravModifier + "\n\n" +
-            Mathf.Clamp01(Mathf.Pow(Lift / 30, 3f)) + "\n";
+        //debugText2.text =
+        //    forwardGravMod + "\n" +
+        //    downwardGravMod + "\n" +
+        //    liftGravMod * 2 + "\n" +
+        //    "/4 = " + GravModifier + "\n\n" +
+        //    Mathf.Clamp01(Mathf.Pow(Lift / 30, 3f)) + "\n";
 
 
         LocalVelocity = tt.rotation * LocalVelocity;
@@ -90,7 +90,7 @@ public class LiftGlider : MonoBehaviour
 
         rb.velocity = LocalVelocity;
 
-        debugText1.text = "Lift: " + Lift.ToString("F1") + "\nHeight: " + tt.position.y.ToString("F1") + "\nVelocity: " + Velocity.ToString("F1");
+        //debugText1.text = "Lift: " + Lift.ToString("F1") + "\nHeight: " + tt.position.y.ToString("F1") + "\nVelocity: " + Velocity.ToString("F1");
 
 
         #region nonWorking
