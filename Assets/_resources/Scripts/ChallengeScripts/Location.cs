@@ -53,6 +53,7 @@ namespace Assets._resources.Scripts.ChallengeScripts
         {
             screenRect = new Rect(screenMargin, screenMargin, Screen.width - (screenMargin * 2), Screen.height - (screenMargin * 2));
             trigger = GetComponent<Collider>();
+            SequenceIndex = Type == LocationType.Start ? 0 : transform.GetSiblingIndex() + 1;
         }
 
         private IEnumerator UpdateMarkerScreenPosition()

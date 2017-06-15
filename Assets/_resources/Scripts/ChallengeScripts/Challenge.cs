@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Assets._resources.Scripts.ChallengeScripts
 {
+    [RequireComponent(typeof(Location))]
     public abstract class Challenge : MonoBehaviour
     {
         /// <summary>
@@ -27,17 +28,18 @@ namespace Assets._resources.Scripts.ChallengeScripts
 
         public bool IsRunning;
         public float StartTime;
+        public int ParticipantsRequired;
 
         public bool DebugStartChallenge;
 
         void Awake()
         {
-            LocationsInOrder = GetComponentsInChildren<Location>().OrderBy(l=>l.SequenceIndex).ToDictionary(l=>l.SequenceIndex);
             ParticipantStatus = new Dictionary<PlayerChallengeModule, bool>();
         }
 
         protected virtual void Start()
         {
+            LocationsInOrder = GetComponentsInChildren<Location>().OrderBy(l => l.SequenceIndex).ToDictionary(l => l.SequenceIndex);
             if (LocationsInOrder != null)
             {
                 LocationsInOrder.Values.ToList().ForEach(l=>l.OnPlayerEntered+=OnPlayerEnteredLocation);
@@ -57,6 +59,8 @@ namespace Assets._resources.Scripts.ChallengeScripts
         public void SubmitParticipant(PlayerChallengeModule participant)
         {
             ParticipantStatus.Add(participant, false);
+            if(ParticipantStatus.Count >= ParticipantsRequired)
+                StartChallenge();
             Debug.Log("Player " + participant.DeltaFlyer.raptor.ID + " is now participating in a challenge");
         }
 
