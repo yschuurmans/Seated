@@ -169,12 +169,14 @@ public class LiftMovement : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(rb.position, rb.position + rb.velocity);
+        if (Application.isPlaying)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(rb.position, rb.position + rb.velocity);
 
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(rb.position, rb.position + LocalVelocity);
-
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(rb.position, rb.position + LocalVelocity);
+        }
         //Gizmos.color = Color.blue;
         //Gizmos.DrawLine(rb.position, rb.position + transform.InverseTransformDirection(rb.velocity));
     }
