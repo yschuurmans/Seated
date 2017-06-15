@@ -66,7 +66,8 @@ namespace Assets.Classes
         {
             Camera.main.ViewportToWorldPoint(Vector3.zero);
             Bounds bounds = new Bounds(Camera.main.);
-            Camera.main.
+            //Camera.main.
+            return Vector3.zero;
         }
 
         void OnTriggerEnter(Collider other)
