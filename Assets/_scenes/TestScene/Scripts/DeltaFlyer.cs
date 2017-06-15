@@ -6,8 +6,10 @@ using UnityEngine;
 
 public class DeltaFlyer : MonoBehaviour
 {
+   
     public Raptor raptor;
-    
+
+    public Transform spawnPoint;
     public ContactPoint[] contactPoints { get { return raptor.contactPoints; } }
     public AirStream currentAirStream;
     //only one airstream can be detect at a time
@@ -55,6 +57,7 @@ public class DeltaFlyer : MonoBehaviour
         }
     }
 
+
     void Awake()
     {
         inputMngr = GetComponent<InputManager>();
@@ -75,6 +78,15 @@ public class DeltaFlyer : MonoBehaviour
     void LateUpdate()
     {
         //if (currentAirStream != null) placeParticleSystem(currentAirStream, movingDirection, currentAirStream.getClosestPoint(this), ps);
+    }
+
+  
+
+    public void Respawn()
+    {
+        transform.position = spawnPoint.position;
+        transform.rotation = spawnPoint.rotation;
+       // transform.SetPositionAndRotation(spawnPoint.position,spawnPoint.rotation);
     }
 
     public void resetMotors()
