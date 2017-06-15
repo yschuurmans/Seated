@@ -35,12 +35,12 @@ public class PlayerChallengeModule : MonoBehaviour
                 return;
 
             if(_currentTargetLocation != null)
-                _currentTargetLocation.IsTargetLocation = false;
+                _currentTargetLocation.SetIsTargetLocation(null);
             //Assign new location as current
             _currentTargetLocation = value;
 
             if (_currentTargetLocation != null)
-                _currentTargetLocation.IsTargetLocation = true;
+                _currentTargetLocation.SetIsTargetLocation(this);
         }
     }
 

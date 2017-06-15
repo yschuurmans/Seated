@@ -928,7 +928,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294959103
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -4211,7 +4211,8 @@ GameObject:
   - component: {fileID: 907030647}
   - component: {fileID: 907030646}
   - component: {fileID: 907030649}
-  m_Layer: 0
+  - component: {fileID: 907030650}
+  m_Layer: 9
   m_Name: DeltaFlyer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4226,7 +4227,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 907030643}
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 77.35, y: 5.61, z: 0}
+  m_LocalPosition: {x: 77.5946, y: 5.738, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1874440933}
@@ -4318,6 +4319,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DeltaFlyer: {fileID: 907030647}
   StartTime: 0
+--- !u!65 &907030650
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 907030643}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.05, y: 0.22224712, z: 1.12}
+  m_Center: {x: 0, y: 0.43, z: 0.12}
 --- !u!1 &911317110
 GameObject:
   m_ObjectHideFlags: 0
@@ -4356,7 +4369,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 970476988}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4685,6 +4698,11 @@ Prefab:
     - target: {fileID: 4292036115696208, guid: af0093e42f06efe498fd542fd165db2f, type: 2}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010194061219778, guid: af0093e42f06efe498fd542fd165db2f,
+        type: 2}
+      propertyPath: ParticipantsRequired
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: af0093e42f06efe498fd542fd165db2f, type: 2}
