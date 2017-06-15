@@ -63,13 +63,13 @@ public class PlayerChallengeModule : MonoBehaviour
             //Make challenge start triggers visible to camera depending on if player is currently in a challenge
             if (value == null)
             {
-                CameraCullingMaskHelper.ShowLayer("ChallengeStart");
-                Camera.main.cullingMask |= 1 << LayerMask.NameToLayer("ChallengeStart");
+                CameraCullingMaskHelper.ShowLayer("StartLocation");
+                //Camera.main.cullingMask |= 1 << LayerMask.NameToLayer("ChallengeStart");
             }
             else
             {
-                CameraCullingMaskHelper.HideLayer("ChallengeStart");
-                Camera.main.cullingMask &= ~(1 << LayerMask.NameToLayer("ChallengeStart"));
+                CameraCullingMaskHelper.HideLayer("StartLocation");
+                //Camera.main.cullingMask &= ~(1 << LayerMask.NameToLayer("ChallengeStart"));
             }
 
             _activeChallenge = value;

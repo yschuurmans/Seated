@@ -16,14 +16,15 @@ public class DeltaFlyer : MonoBehaviour
     public List<AirStream> detectedAirStreams = new List<AirStream>();
     InputManager inputMngr;   
 
-    private float minImpactRadius = 0.8f;
-    private float maxImpactRadius = 1.3f;
+    public float minImpactRadius = 0.8f;
+    public float maxImpactRadius = 1.5f;
 
     //gizmos variables
     public float impactRadius;
     Vector3 gizClosesImpactPoint;
     public Vector3 tmpPoint;
     public Vector3 tmpClostestPoint;
+    public Ray rayToDeltaflyer;
 
 
     //testVariables
@@ -96,7 +97,10 @@ public class DeltaFlyer : MonoBehaviour
         RaycastHit hit;
         Vector3 direction = (this.raptor.raptorCollider.transform.position - closestPointOnLine).normalized;
         Ray ray = new Ray(closestPointOnLine, direction);
-        Physics.Raycast(ray, out hit);
+        rayToDeltaflyer = ray;
+        int layer = 1 << LayerMask.NameToLayer("RaptorCollider");
+       
+        Physics.Raycast(ray, out hit, 9999999999999999999, layer);
         Vector3 closestImpactPoint = hit.point;
         gizClosesImpactPoint = closestImpactPoint;
 
@@ -199,31 +203,30 @@ public class DeltaFlyer : MonoBehaviour
 
         if (!isInDetectionRange)
         {
-            Debug.Log("user is not in detection range yet, so entering detection range");
+            //user is not in detection range yet, so entering detection range
             detectedAirStream = stream;
         }
         else if (!isInAirstream && detectedAirStream != stream)
         {
             if (stream.isClostestAirstream(this, stream, detectedAirStream))
             {
-                Debug.Log("user detected an airstream that is closest. user is not in an airstream");
+                //user detected an airstream that is closest. user is not in an airstream
                 detectedAirStream = stream;
             }
             else
             {
-                Debug.Log("user detected an airstream but it is NOT closest. user is not in an airstream");
+                //user detected an airstream but it is NOT closest. user is not in an airstream
             }
         }
-        if (isInAirstream && !detectedAirStreams.Contains(stream))
+        if (isInAirstream && !detectedAirStreams.Contains(stream) && stream != detectedAirStream)
         {
-            Debug.Log("user is in an airstream and detected by another airstream");
+            //user is in an airstream and detected by another airstream
             stream.enterParticleStream(this, stream.getOtherPoint(detectedAirStream.ps.transform));
         }
 
         detectedAirStreams.Add(stream);
         stream.inDetectionRange.Add(this);
-        Debug.Log("Airstream entered, count: " + detectedAirStreams.Count);
-        
+                
         detectedAirstreamsCount++;
 }
 
@@ -258,6 +261,7 @@ public class DeltaFlyer : MonoBehaviour
         Gizmos.DrawSphere(tmpClostestPoint, 1f);
         Gizmos.color = Color.white;
         Gizmos.DrawSphere(tmpPoint, 1f);
+        Gizmos.DrawLine(rayToDeltaflyer.origin, rayToDeltaflyer.direction.normalized * 1000);
     }
 
 
