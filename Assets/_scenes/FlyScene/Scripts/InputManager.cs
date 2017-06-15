@@ -112,6 +112,13 @@ public class InputManager : MonoBehaviour
             flyObject.rotation = Quaternion.identity;
             flyObject.position = new Vector3(0, 200, 0);
             flyObject.velocity = Vector3.zero;
+            flyObject.angularVelocity = Vector3.zero;
+            flyObject.freezeRotation = true;
+        }
+        else
+        {
+
+            flyObject.freezeRotation = false;
         }
     }
 

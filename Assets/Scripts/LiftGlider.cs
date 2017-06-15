@@ -135,7 +135,8 @@ public class LiftGlider : MonoBehaviour
 
     public void AddLift(float value)
     {
-        RecentLift.Add(Lift + value);
+        if (RecentLift.Count <= 0) return;
+        RecentLift.Add(RecentLift[RecentLift.Count-1] + value);
     }
 
 
