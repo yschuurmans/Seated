@@ -218,6 +218,8 @@ public class AirStream : MonoBehaviour
 
     void OnDrawGizmos()
     {
+        if (!Application.isPlaying) return;
+
         if (GameManager.instance.flyers[0] == null ||
             Vector3.Distance(GameManager.instance.flyers[0].transform.position, closestPointOnLineTemp) <= thickness || alwaysDrawGizmos)
         {

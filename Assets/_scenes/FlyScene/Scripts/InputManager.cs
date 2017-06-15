@@ -100,6 +100,24 @@ public class InputManager : MonoBehaviour
         if (prevState.Buttons.X == ButtonState.Pressed && (state.Buttons.X == ButtonState.Released || state.Buttons.X == ButtonState.Pressed)) flyObject.AddForce(transform.forward * 2000 * Time.deltaTime);
         if (state.Triggers.Right > 0.05f)
             flyObject.AddForce(transform.forward * state.Triggers.Right * 2000 * Time.deltaTime);
+
+        if (state.Triggers.Left > 0.05f)
+            flyObject.AddForce(transform.forward * state.Triggers.Left * -2000 * Time.deltaTime);
+
+        if (prevState.Buttons.Back == ButtonState.Pressed && state.Buttons.Back == ButtonState.Pressed &&
+            prevState.Buttons.Start == ButtonState.Pressed && state.Buttons.Start == ButtonState.Pressed)
+        {
+            flyObject.rotation = Quaternion.identity;
+            flyObject.position = new Vector3(0, 200, 0);
+            flyObject.velocity = Vector3.zero;
+            flyObject.angularVelocity = Vector3.zero;
+            flyObject.freezeRotation = true;
+        }
+        else
+        {
+
+            flyObject.freezeRotation = false;
+        }
     }
 
 

@@ -1,6 +1,6 @@
-﻿using Assets.Classes;
-using UnityEngine;
-
-public class RescueChallenge : Challenge{
+﻿namespace Assets._resources.Scripts.ChallengeScripts
+{
+    public class RescueChallenge : Challenge{
     
+    }
 }

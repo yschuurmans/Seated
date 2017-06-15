@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Classes;
 using Assets.TestScene.Scripts.HelperClasses;
+using Assets._resources.Scripts.ChallengeScripts;
 using UnityEngine;
 
 public class PlayerChallengeModule : MonoBehaviour
@@ -35,12 +35,12 @@ public class PlayerChallengeModule : MonoBehaviour
                 return;
 
             if(_currentTargetLocation != null)
-                _currentTargetLocation.IsTargetLocation = false;
+                _currentTargetLocation.SetIsTargetLocation(null);
             //Assign new location as current
             _currentTargetLocation = value;
 
             if (_currentTargetLocation != null)
-                _currentTargetLocation.IsTargetLocation = true;
+                _currentTargetLocation.SetIsTargetLocation(this);
         }
     }
 
@@ -71,6 +71,11 @@ public class PlayerChallengeModule : MonoBehaviour
 
             _activeChallenge = value;
         }
+    }
+
+    void Awake()
+    {
+        DeltaFlyer = GetComponent<DeltaFlyer>();
     }
 
     public void StartChallenge(Challenge challenge)

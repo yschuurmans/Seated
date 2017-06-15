@@ -12,11 +12,13 @@ public class LiftGlider : MonoBehaviour
     public float GravModifierImpact = 1f;
     public float LiftGravModifier = 1f;
 
-    public Text text;
+    public Text debugText1;
+    public Text debugText2;
 
     private Transform tt;
     private Rigidbody rb;
     public float Lift;
+    public float Velocity;
     private float GravModifier;
     private Vector3 Direction;
     private Vector3 LocalVelocity;
@@ -41,38 +43,54 @@ public class LiftGlider : MonoBehaviour
         //     Cl * ( p * V^2 )                / 2 * A
         //return 1 * (1 * Mathf.Pow(velocity, 2)) / 2 * 1;
 
-        return Mathf.Clamp(Mathf.Pow(velocity, 5f / 7f) * 3, 0, Mathf.Max(5 * velocity,1000));
+        return Mathf.Clamp(Mathf.Pow(velocity, 5f / 7f) * 3, 0, Mathf.Max(5 * velocity, 1000));
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-
-        RecentLift.Add(CalculateLift(rb.velocity.magnitude));
-        while (RecentLift.Count > 60) RecentLift.RemoveAt(0);
+        Velocity = rb.velocity.magnitude;
+        LiftGravModifier = 0.5f;
+        //LiftGravModifier = Mathf.Lerp(Mathf.Clamp01(0.2f + Mathf.Clamp(Vector3.Angle(Vector3.up, tt.forward) - Mathf.Clamp(Lift / 2,0,45), 0, 180) / 180), 0.7f, Mathf.Clamp01(Mathf.Pow(Lift / 60, 0.2f)));
+        RecentLift.Add(CalculateLift(rb.velocity.magnitude * LiftGravModifier));
+        while (RecentLift.Count >  60) RecentLift.RemoveAt(0);
         Lift = RecentLift.Average();
 
-        Debug.Log("Velocity: " + rb.velocity.magnitude + " Lift: " + Lift);
+        //Debug.Log("Velocity: " + rb.velocity.magnitude + " Lift: " + Lift);
         LocalVelocity = Vector3.zero;
 
-        LocalVelocity.y = Lift * UpwardLiftRatio;
-        LocalVelocity.z = Lift * ForwardLiftRatio;
+        LocalVelocity.y = Lift * UpwardLiftRatio;// * Mathf.Clamp01(Mathf.Pow(Lift / 15, 3f));
+        LocalVelocity.z = Lift * ForwardLiftRatio * Mathf.Clamp01(Mathf.Pow(Lift / 20, 0.3f));
         LocalVelocity = LocalVelocity.normalized * Lift * LiftMultiplier;
-        
+
+
+        // Lift Degradation flying sideways: https://www.desmos.com/calculator/rw5hcjrbwo
+
+        float forwardGravMod = 1 - Mathf.Clamp(Vector3.Angle(Vector3.down, tt.forward), 0, 70) / 70;
+        float downwardGravMod =
+            Mathf.Clamp01(Mathf.Clamp(Vector3.Angle(Vector3.down, tt.up * -1), 0, 90) / 90 *
+                          Mathf.Clamp01(Mathf.Pow(Lift / 20, 0.2f)));
+        float liftGravMod = 1 - Mathf.Clamp01(Mathf.Pow(Lift / 20, 0.2f));
+
+        GravModifier = (forwardGravMod + downwardGravMod + liftGravMod * 2) / 4;
+
+        debugText2.text =
+            forwardGravMod + "\n" +
+            downwardGravMod + "\n" +
+            liftGravMod * 2 + "\n" +
+            "/4 = " + GravModifier + "\n\n" +
+            Mathf.Clamp01(Mathf.Pow(Lift / 30, 3f)) + "\n";
+
 
         LocalVelocity = tt.rotation * LocalVelocity;
 
-        GravModifier = Mathf.Lerp(0.1f, 0.5f, (Mathf.Clamp(Vector3.Angle(Vector3.down, -1*tt.up), 0, 110) / 110));
-
-
         LocalVelocity = Vector3.Lerp(rb.velocity - rb.velocity * 0.2f * Time.deltaTime,
             LocalVelocity,
-            5f * Time.deltaTime) + (Physics.gravity * rb.mass * GravModifier);
+            5f * Time.deltaTime) + Physics.gravity * rb.mass * (GravModifier * GravModifierImpact);
 
         rb.velocity = LocalVelocity;
 
-
-        text.text = "Lift: " + Lift.ToString("F1") + "\nHeight: " + tt.position.y.ToString("F1");
+        debugText1.text = "Lift: " + Lift.ToString("F1") + "\nHeight: " + tt.position.y.ToString("F1") + "\nVelocity: " + Velocity.ToString("F1");
 
 
         #region nonWorking
@@ -90,7 +108,7 @@ public class LiftGlider : MonoBehaviour
         LocalVelocity += ForwardLiftRatio * tt.forward;
         LocalVelocity = LocalVelocity.normalized * Lift * LiftMultiplier;
 
-        text.text = LocalVelocity.ToString();
+        debugText1.debugText1 = LocalVelocity.ToString();
 
         rb.AddForce(LocalVelocity);
         */
@@ -100,15 +118,25 @@ public class LiftGlider : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(rb.position, rb.position + rb.velocity);
-        
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(rb.position, rb.position + LocalVelocity);
+        if (Application.isPlaying)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(rb.position, rb.position + rb.velocity);
 
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(rb.position, rb.position + Physics.gravity * rb.mass * GravModifier
-            /* * (GravModifier * GravModifierImpact)*/);
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(rb.position, rb.position + LocalVelocity);
+
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(rb.position, rb.position + Physics.gravity * rb.mass * GravModifier
+                /* * (GravModifier * GravModifierImpact)*/);
+
+        }
+    }
+
+    public void AddLift(float value)
+    {
+        if (RecentLift.Count <= 0) return;
+        RecentLift.Add(RecentLift[RecentLift.Count-1] + value);
     }
 
 

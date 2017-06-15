@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections;
 using UnityEngine;
 
-namespace Assets.Classes
+namespace Assets._resources.Scripts.ChallengeScripts
 {
     public class Location : MonoBehaviour
     {
@@ -14,7 +10,9 @@ namespace Assets.Classes
 
         public LocationType Type;
         public int SequenceIndex;
-        public GameObject WaypointMarker;
+        public GameObject ScreenWaypointMarker;
+        public GameObject WorldWaypointMarker;
+        private bool ShowMarker = false;
 
         private Collider trigger;
         private bool _showMarker;
@@ -22,58 +20,59 @@ namespace Assets.Classes
         float screenMargin = 50;
         Rect screenRect;
 
-        public bool IsTargetLocation
-        {
-            set
-            {
-                ShowMarker = value;
-
-                if (Type != LocationType.Start)
-                {
-                    gameObject.layer = value ? LayerMask.NameToLayer("VisibleLocation") : LayerMask.NameToLayer("InvisibleLocation");
-                }
-            }
-        }
-
-        public bool ShowMarker
-        {
-            get
-            {
-                return _showMarker;
-            }
-            set
-            {
-                if (_showMarker == value)
-                    return;
-
-                _showMarker = value;
-
-                if (value)
-                    StartCoroutine(UpdateMarkerScreenPosition());
-            }
-        }
-
         void Awake()
         {
             screenRect = new Rect(screenMargin, screenMargin, Screen.width - (screenMargin * 2), Screen.height - (screenMargin * 2));
             trigger = GetComponent<Collider>();
+            SequenceIndex = Type == LocationType.Start ? 0 : transform.GetSiblingIndex() + 1;
         }
 
-        private IEnumerator UpdateMarkerScreenPosition()
+        public void SetIsTargetLocation(PlayerChallengeModule player)
+        {
+            SetShowMarkerForPlayer(player);
+
+            if (Type != LocationType.Start)
+            {
+                gameObject.layer = ShowMarker ? LayerMask.NameToLayer("VisibleLocation") : LayerMask.NameToLayer("InvisibleLocation");
+            }
+
+        }
+
+        public void SetShowMarkerForPlayer(PlayerChallengeModule player)
+        {
+            if (ShowMarker == (player != null))
+                return;
+
+            ShowMarker = player != null;
+
+            if (ShowMarker)
+                StartCoroutine(UpdateMarkerScreenPosition(player));
+
+            WorldWaypointMarker.SetActive(ShowMarker);
+        }
+
+        private IEnumerator UpdateMarkerScreenPosition(PlayerChallengeModule player)
         {
             while (ShowMarker)
             {
-                Vector3 pos = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, 4, 0));
+                Vector3 pos = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, 0, 0));
                 if (screenRect.Contains(pos))
                 {
                     if (pos.z >= 0)
                     {
-                        WaypointMarker.transform.position = pos;
+                        WorldWaypointMarker.transform.position = transform.position;
+                        WorldWaypointMarker.transform.LookAt(player.transform);
                     }
+
+                    if (!WorldWaypointMarker.activeSelf) WorldWaypointMarker.SetActive(true);
+                    if (ScreenWaypointMarker.activeSelf) ScreenWaypointMarker.SetActive(false);
                 }
                 else
                 {
-                    WaypointMarker.transform.position = GetMarkerPosition();
+
+                    ScreenWaypointMarker.transform.position = GetMarkerPosition();
+                    if (!ScreenWaypointMarker.activeSelf) ScreenWaypointMarker.SetActive(true);
+                    if (WorldWaypointMarker.activeSelf) WorldWaypointMarker.SetActive(false);
                 }
                 yield return null;
             }
@@ -94,13 +93,9 @@ namespace Assets.Classes
 
         void OnDrawGizmos()
         {
+            if (!Application.isPlaying) return;
             Gizmos.DrawSphere(trigger.bounds.center, trigger.bounds.size.x);
         }
-
-       
-
-     
-
 
         public enum LocationType
         {
