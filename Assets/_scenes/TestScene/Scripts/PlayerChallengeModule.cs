@@ -20,7 +20,7 @@ public class PlayerChallengeModule : MonoBehaviour
 
     //EventHandlers
     public delegate void PlayerCompletedChallenge(PlayerChallengeModule challengeModule);
-    public PlayerCompletedChallenge OnPlayerCompletedChallenge = (challengeModule) => {};
+    public PlayerCompletedChallenge OnPlayerCompletedChallenge = (challengeModule) => { };
 
     public Location CurrentTargetLocation
     {
@@ -34,7 +34,7 @@ public class PlayerChallengeModule : MonoBehaviour
             if (_currentTargetLocation == value)
                 return;
 
-            if(_currentTargetLocation != null)
+            if (_currentTargetLocation != null)
                 _currentTargetLocation.SetIsTargetLocation(null);
             //Assign new location as current
             _currentTargetLocation = value;
@@ -82,7 +82,7 @@ public class PlayerChallengeModule : MonoBehaviour
     {
         ActiveChallenge = challenge;
         StartTime = Time.time;
-        
+
         //Entered starting location
         OnEnterLocation(challenge.LocationsInOrder.First().Value);
     }
@@ -96,7 +96,14 @@ public class PlayerChallengeModule : MonoBehaviour
             CurrentTargetLocation = null;
             return;
         }
-        CurrentTargetLocation = ActiveChallenge.LocationsInOrder.Values.FirstOrDefault(l=>l.SequenceIndex == enteredLocation.SequenceIndex + 1);
+
+        CurrentTargetLocation = ActiveChallenge.LocationsInOrder.Values.FirstOrDefault(l => l.SequenceIndex == enteredLocation.SequenceIndex + 1);
+
+        DeltaFlyer.spawnPoint = enteredLocation.transform;
+        //Transform spawn = DeltaFlyer.spawnPoint;
+        //spawn.transform.position = enteredLocation.transform.position;
+        //spawn.transform.LookAt(CurrentTargetLocation.transform);
+        //DeltaFlyer.spawnPoint = spawn;
     }
 
     public void OnChallengeCompleted()
@@ -113,6 +120,8 @@ public class PlayerChallengeModule : MonoBehaviour
             CompletedChallengeResults.Add(ActiveChallenge, elapsedTime);
         }
         OnPlayerCompletedChallenge(this);
+        Challenge.ChallengeMedal medal = ActiveChallenge.GetAchievedMedal(elapsedTime);
+        Debug.Log("Player achieved a " + medal + " medal!");
         ActiveChallenge = null;
     }
 }
