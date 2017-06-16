@@ -17,6 +17,7 @@ public class DeltaFlyer : MonoBehaviour
     public AirStream detectedAirStream;
     public List<AirStream> detectedAirStreams = new List<AirStream>();
     InputManager inputMngr;
+    public LiftGlider glider;
 
     public float minImpactRadius = 0.8f;
     public float maxImpactRadius = 1.5f;
@@ -27,6 +28,8 @@ public class DeltaFlyer : MonoBehaviour
     public Vector3 tmpPoint;
     public Vector3 tmpClostestPoint;
     public Ray rayToDeltaflyer;
+
+    public float LiftGain;
 
 
     //testVariables
@@ -141,6 +144,7 @@ public class DeltaFlyer : MonoBehaviour
     public void inAirstream(Vector3 closestPoint)
     {
         //resetMotors();
+        glider.AddLift(LiftGain);
     }
 
     public float getForce(float force, Vector3 objectPos, Vector3 closestPointOnLine, float minForcePerc, float range)
