@@ -120,6 +120,8 @@ public class PlayerChallengeModule : MonoBehaviour
             CompletedChallengeResults.Add(ActiveChallenge, elapsedTime);
         }
         OnPlayerCompletedChallenge(this);
+        Challenge.ChallengeMedal medal = ActiveChallenge.GetAchievedMedal(elapsedTime);
+        Debug.Log("Player achieved a " + medal + " medal!");
         ActiveChallenge = null;
     }
 }
