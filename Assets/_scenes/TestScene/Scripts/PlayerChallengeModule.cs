@@ -96,7 +96,14 @@ public class PlayerChallengeModule : MonoBehaviour
             CurrentTargetLocation = null;
             return;
         }
+        
         CurrentTargetLocation = ActiveChallenge.LocationsInOrder.Values.FirstOrDefault(l=>l.SequenceIndex == enteredLocation.SequenceIndex + 1);
+
+        DeltaFlyer.spawnPoint = enteredLocation.transform;
+        //Transform spawn = DeltaFlyer.spawnPoint;
+        //spawn.transform.position = enteredLocation.transform.position;
+        //spawn.transform.LookAt(CurrentTargetLocation.transform);
+        //DeltaFlyer.spawnPoint = spawn;
     }
 
     public void OnChallengeCompleted()

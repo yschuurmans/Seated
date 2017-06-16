@@ -8,6 +8,7 @@ public class InputManager : MonoBehaviour
     public static float instance;
 
     public bool DebugHackies;
+    private DeltaFlyer df;
     public float turnRate;
     public float velocity;
     private Rigidbody flyObject;
@@ -21,6 +22,7 @@ public class InputManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        df = GetComponent<DeltaFlyer>();
         flyObject = GetComponent<Rigidbody>();
         flyObject.velocity = Vector3.zero;
     }
@@ -84,6 +86,7 @@ public class InputManager : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.Space))
         {
+            df.Respawn();
             //transform.position += Vector3.up * velocity;
         }
         if (Input.GetKey(KeyCode.LeftShift))
