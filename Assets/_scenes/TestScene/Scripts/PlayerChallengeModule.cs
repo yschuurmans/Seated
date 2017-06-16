@@ -62,6 +62,7 @@ public class PlayerChallengeModule : MonoBehaviour
             {
                 CameraCullingMaskHelper.ShowLayer("StartLocation");
                 //Camera.main.cullingMask |= 1 << LayerMask.NameToLayer("ChallengeStart");
+                ShowStartLocations();
             }
             else
             {
@@ -77,6 +78,18 @@ public class PlayerChallengeModule : MonoBehaviour
     {
         DeltaFlyer = GetComponent<DeltaFlyer>();
     }
+
+    void Start()
+    {
+        ShowStartLocations();
+    }
+
+    private void ShowStartLocations()
+    {
+        CurrentTargetLocation = ChallengeController.Instance.Challenge.LocationsInOrder.First(
+                    loc => loc.Value.Type == Location.LocationType.Start).Value;
+    }
+
 
     public void StartChallenge(Challenge challenge)
     {
