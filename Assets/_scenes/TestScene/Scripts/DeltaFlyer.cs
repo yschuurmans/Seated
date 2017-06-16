@@ -6,8 +6,10 @@ using UnityEngine;
 
 public class DeltaFlyer : MonoBehaviour
 {
+
     public Raptor raptor;
-    
+
+    public Transform spawnPoint;
     public ContactPoint[] contactPoints { get { return raptor.contactPoints; } }
     public AirStream currentAirStream;
     //only one airstream can be detect at a time
@@ -15,7 +17,6 @@ public class DeltaFlyer : MonoBehaviour
     public AirStream detectedAirStream;
     public List<AirStream> detectedAirStreams = new List<AirStream>();
     InputManager inputMngr;
-    public LiftGlider glider;
 
     public float minImpactRadius = 0.8f;
     public float maxImpactRadius = 1.5f;
@@ -27,7 +28,6 @@ public class DeltaFlyer : MonoBehaviour
     public Vector3 tmpClostestPoint;
     public Ray rayToDeltaflyer;
 
-    public float LiftGain;
 
     //testVariables
     public int detectedAirstreamsCount = 0;
@@ -57,6 +57,7 @@ public class DeltaFlyer : MonoBehaviour
         }
     }
 
+
     void Awake()
     {
         inputMngr = GetComponent<InputManager>();
@@ -77,6 +78,15 @@ public class DeltaFlyer : MonoBehaviour
     void LateUpdate()
     {
         //if (currentAirStream != null) placeParticleSystem(currentAirStream, movingDirection, currentAirStream.getClosestPoint(this), ps);
+    }
+
+
+
+    public void Respawn()
+    {
+        transform.position = spawnPoint.position;
+        transform.rotation = spawnPoint.rotation;
+        // transform.SetPositionAndRotation(spawnPoint.position,spawnPoint.rotation);
     }
 
     public void resetMotors()
@@ -101,7 +111,7 @@ public class DeltaFlyer : MonoBehaviour
         Ray ray = new Ray(closestPointOnLine, direction);
         rayToDeltaflyer = ray;
         int layer = 1 << LayerMask.NameToLayer("RaptorCollider");
-       
+
         Physics.Raycast(ray, out hit, 9999999999999999999, layer);
         Vector3 closestImpactPoint = hit.point;
         gizClosesImpactPoint = closestImpactPoint;
@@ -131,7 +141,6 @@ public class DeltaFlyer : MonoBehaviour
     public void inAirstream(Vector3 closestPoint)
     {
         //resetMotors();
-        glider.AddLift(LiftGain);
     }
 
     public float getForce(float force, Vector3 objectPos, Vector3 closestPointOnLine, float minForcePerc, float range)
@@ -165,7 +174,7 @@ public class DeltaFlyer : MonoBehaviour
         }
         detectedAirStream.enterParticleStream(this, movingDir);
 
-        inputMngr.velocity *= 2;        
+        inputMngr.velocity *= 2;
 
         foreach (ContactPoint cp in contactPoints)
         {
@@ -183,7 +192,7 @@ public class DeltaFlyer : MonoBehaviour
     /// </summary>
     public void leftAirstream()
     {
-        foreach(AirStream stream in detectedAirStreams)
+        foreach (AirStream stream in detectedAirStreams)
         {
             stream.leaveParticleStream(this);
         }
@@ -229,9 +238,9 @@ public class DeltaFlyer : MonoBehaviour
 
         detectedAirStreams.Add(stream);
         stream.inDetectionRange.Add(this);
-                
+
         detectedAirstreamsCount++;
-}
+    }
 
     public void leftDetectionRange(AirStream stream)
     {
@@ -240,7 +249,7 @@ public class DeltaFlyer : MonoBehaviour
         detectedAirStreams.Remove(stream);
         stream.inDetectionRange.Remove(this);
         stream.leaveParticleStream(this);
-        
+
         detectedAirstreamsCount--;
     }
 
