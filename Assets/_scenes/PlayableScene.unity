@@ -4517,6 +4517,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baaba0978a7e83547991217a2aa2bbb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DebugHackies: 0
   turnRate: 1
   velocity: 0.3
 --- !u!114 &907030649
@@ -4680,26 +4681,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Times of our lives
   description: Do x in y time (duh)
+  BronzeMedalTime: 30
+  SilverMedalTime: 15
+  GoldMedalTime: 10.5
   IsRunning: 0
   StartTime: 0
   ParticipantsRequired: 1
   DebugStartChallenge: 0
   time: 60
---- !u!114 &911610164
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 911610162}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8967d60bca919f547bded21ead77a7e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Type: 0
-  SequenceIndex: 0
-  ScreenWaypointMarker: {fileID: 539414192}
-  WorldWaypointMarker: {fileID: 1088883910}
 --- !u!1 &970476987
 GameObject:
   m_ObjectHideFlags: 0

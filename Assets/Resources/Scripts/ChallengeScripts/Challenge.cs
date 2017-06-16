@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace Assets._resources.Scripts.ChallengeScripts
 {
-    [RequireComponent(typeof(Location))]
     public abstract class Challenge : MonoBehaviour
     {
         public enum ChallengeMedal
