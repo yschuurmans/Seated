@@ -213,7 +213,6 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 539414193}
-  - {fileID: 67144572}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5036,7 +5035,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!95 &907030646
 Animator:
   serializedVersion: 3
@@ -5105,7 +5104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DeltaFlyer: {fileID: 907030647}
-  TextField: {fileID: 67144573}
+  TextField: {fileID: 0}
   StartTime: 0
 --- !u!65 &907030650
 BoxCollider:
