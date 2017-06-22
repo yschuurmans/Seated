@@ -6,7 +6,7 @@ using UnityEngine;
 public class InputManager : MonoBehaviour
 {
     public static float instance;
-
+    private DeltaFlyer df;
     public float turnRate;
     public float velocity;
     private Rigidbody flyObject;
@@ -20,6 +20,7 @@ public class InputManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        df = GetComponent<DeltaFlyer>();
         flyObject = GetComponent<Rigidbody>();
         flyObject.velocity = Vector3.zero;
     }
@@ -83,6 +84,7 @@ public class InputManager : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.Space))
         {
+            df.Respawn();
             //transform.position += Vector3.up * velocity;
         }
         if (Input.GetKey(KeyCode.LeftShift))
@@ -110,13 +112,6 @@ public class InputManager : MonoBehaviour
             flyObject.rotation = Quaternion.identity;
             flyObject.position = new Vector3(0, 200, 0);
             flyObject.velocity = Vector3.zero;
-            flyObject.angularVelocity = Vector3.zero;
-            flyObject.freezeRotation = true;
-        }
-        else
-        {
-
-            flyObject.freezeRotation = false;
         }
     }
 

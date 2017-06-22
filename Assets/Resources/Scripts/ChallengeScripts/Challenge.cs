@@ -4,9 +4,16 @@ using UnityEngine;
 
 namespace Assets._resources.Scripts.ChallengeScripts
 {
-    [RequireComponent(typeof(Location))]
     public abstract class Challenge : MonoBehaviour
     {
+        public enum ChallengeMedal
+        {
+            None,
+            Bronze,
+            Silver,
+            Gold
+        }
+
         /// <summary>
         /// name of the challenge
         /// </summary>
@@ -26,15 +33,21 @@ namespace Assets._resources.Scripts.ChallengeScripts
         [SerializeField]
         public Dictionary<int, Location> LocationsInOrder;
 
+        public Dictionary<ChallengeMedal, float> MedalRequirements = new Dictionary<ChallengeMedal, float>();
+
+        public float BronzeMedalTime;
+        public float SilverMedalTime;
+        public float GoldMedalTime;
+
         public bool IsRunning;
         public float StartTime;
         public int ParticipantsRequired;
-
         public bool DebugStartChallenge;
 
         void Awake()
         {
             ParticipantStatus = new Dictionary<PlayerChallengeModule, bool>();
+            MedalRequirements = new Dictionary<ChallengeMedal, float>();
         }
 
         protected virtual void Start()
@@ -42,9 +55,13 @@ namespace Assets._resources.Scripts.ChallengeScripts
             LocationsInOrder = GetComponentsInChildren<Location>().OrderBy(l => l.SequenceIndex).ToDictionary(l => l.SequenceIndex);
             if (LocationsInOrder != null)
             {
-                LocationsInOrder.Values.ToList().ForEach(l=>l.OnPlayerEntered+=OnPlayerEnteredLocation);
+                LocationsInOrder.Values.ToList().ForEach(l => l.OnPlayerEntered += OnPlayerEnteredLocation);
             }
-        
+
+            MedalRequirements.Add(ChallengeMedal.Gold, GoldMedalTime);
+            MedalRequirements.Add(ChallengeMedal.Silver, SilverMedalTime);
+            MedalRequirements.Add(ChallengeMedal.Bronze, BronzeMedalTime);
+            MedalRequirements.Add(ChallengeMedal.None, 10000000);
         }
 
         void Update()
@@ -59,7 +76,7 @@ namespace Assets._resources.Scripts.ChallengeScripts
         public void SubmitParticipant(PlayerChallengeModule participant)
         {
             ParticipantStatus.Add(participant, false);
-            if(ParticipantStatus.Count >= ParticipantsRequired)
+            if (ParticipantStatus.Count >= ParticipantsRequired)
                 StartChallenge();
             Debug.Log("Player " + participant.DeltaFlyer.raptor.ID + " is now participating in a challenge");
         }
@@ -110,7 +127,11 @@ namespace Assets._resources.Scripts.ChallengeScripts
             {
                 FinalizeChallenge();
             }
+        }
 
+        public ChallengeMedal GetAchievedMedal(float time)
+        {
+            return MedalRequirements.OrderBy(pair => pair.Value).FirstOrDefault(pair => time < pair.Value).Key;
         }
 
         private void FinalizeChallenge()

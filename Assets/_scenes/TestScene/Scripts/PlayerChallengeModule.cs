@@ -5,6 +5,7 @@ using System.Linq;
 using Assets.TestScene.Scripts.HelperClasses;
 using Assets._resources.Scripts.ChallengeScripts;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerChallengeModule : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class PlayerChallengeModule : MonoBehaviour
     //Completed challenges with fastest achieved time
     public Dictionary<Challenge, float> CompletedChallengeResults = new Dictionary<Challenge, float>();
 
+    public Text TextField;
+
     //Current Challenge Variables
     public float StartTime;
     private Location _currentTargetLocation;
@@ -20,7 +23,7 @@ public class PlayerChallengeModule : MonoBehaviour
 
     //EventHandlers
     public delegate void PlayerCompletedChallenge(PlayerChallengeModule challengeModule);
-    public PlayerCompletedChallenge OnPlayerCompletedChallenge = (challengeModule) => {};
+    public PlayerCompletedChallenge OnPlayerCompletedChallenge = (challengeModule) => { };
 
     public Location CurrentTargetLocation
     {
@@ -34,7 +37,7 @@ public class PlayerChallengeModule : MonoBehaviour
             if (_currentTargetLocation == value)
                 return;
 
-            if(_currentTargetLocation != null)
+            if (_currentTargetLocation != null)
                 _currentTargetLocation.SetIsTargetLocation(null);
             //Assign new location as current
             _currentTargetLocation = value;
@@ -62,6 +65,7 @@ public class PlayerChallengeModule : MonoBehaviour
             {
                 CameraCullingMaskHelper.ShowLayer("StartLocation");
                 //Camera.main.cullingMask |= 1 << LayerMask.NameToLayer("ChallengeStart");
+                ShowStartLocations();
             }
             else
             {
@@ -78,11 +82,30 @@ public class PlayerChallengeModule : MonoBehaviour
         DeltaFlyer = GetComponent<DeltaFlyer>();
     }
 
+    void Start()
+    {
+        ShowStartLocations();
+    }
+
+    void Update()
+    {
+        if (ActiveChallenge != null && TextField != null)
+        {
+            TextField.text = "Time: \t" + (Time.time - StartTime);
+        }
+    }
+    private void ShowStartLocations()
+    {
+        CurrentTargetLocation = ChallengeController.Instance.Challenge.LocationsInOrder.First(
+                    loc => loc.Value.Type == Location.LocationType.Start).Value;
+    }
+
+
     public void StartChallenge(Challenge challenge)
     {
         ActiveChallenge = challenge;
         StartTime = Time.time;
-        
+
         //Entered starting location
         OnEnterLocation(challenge.LocationsInOrder.First().Value);
     }
@@ -96,7 +119,14 @@ public class PlayerChallengeModule : MonoBehaviour
             CurrentTargetLocation = null;
             return;
         }
-        CurrentTargetLocation = ActiveChallenge.LocationsInOrder.Values.FirstOrDefault(l=>l.SequenceIndex == enteredLocation.SequenceIndex + 1);
+
+        CurrentTargetLocation = ActiveChallenge.LocationsInOrder.Values.FirstOrDefault(l => l.SequenceIndex == enteredLocation.SequenceIndex + 1);
+
+        //DeltaFlyer.spawnPoint = enteredLocation.transform;
+        //Transform spawn = DeltaFlyer.spawnPoint;
+        //spawn.transform.position = enteredLocation.transform.position;
+        //spawn.transform.LookAt(CurrentTargetLocation.transform);
+        //DeltaFlyer.spawnPoint = spawn;
     }
 
     public void OnChallengeCompleted()
@@ -113,6 +143,12 @@ public class PlayerChallengeModule : MonoBehaviour
             CompletedChallengeResults.Add(ActiveChallenge, elapsedTime);
         }
         OnPlayerCompletedChallenge(this);
+        Challenge.ChallengeMedal medal = ActiveChallenge.GetAchievedMedal(elapsedTime);
+        if (TextField != null)
+        {
+            TextField.text = medal == Challenge.ChallengeMedal.None ? "You were too slow! Better luck next time!" : "Congratulations, you received a " + medal + " medal with a time of " + elapsedTime + " seconds!";
+            Debug.Log("Player achieved a " + medal + " medal!");
+        }
         ActiveChallenge = null;
     }
 }
