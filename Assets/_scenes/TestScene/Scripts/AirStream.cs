@@ -18,7 +18,8 @@ public class AirStream : MonoBehaviour
     private List<ContactPoint> contactPointsHit = new List<ContactPoint>();
     private List<ContactPoint> knownContactPoints = new List<ContactPoint>();
 
-    public ParticleSystem ps;
+    public GameObject Particles;
+    public ParticleSystem[] pSystems;
 
     public List<DeltaFlyer> inAirstream = new List<DeltaFlyer>();
     public List<DeltaFlyer> inDetectionRange = new List<DeltaFlyer>();
@@ -29,8 +30,13 @@ public class AirStream : MonoBehaviour
 
     void Awake()
     {
-        ps = GetComponentInChildren<ParticleSystem>();
-        ps.Stop();
+        pSystems = Particles.GetComponentsInChildren<ParticleSystem>();
+        foreach (ParticleSystem ps in pSystems)
+        {
+            ParticleSystem.ShapeModule sm = ps.shape;
+            sm.radius = thickness;
+            ps.Stop();
+        }
     }
 
     // Use this for initialization
@@ -47,6 +53,11 @@ public class AirStream : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        checkForDeltaFlyer();
+    }
+
+    void checkForDeltaFlyer()
+    {
         foreach (DeltaFlyer df in GameManager.instance.flyers)
         {
             Vector3 closestPoint = ClosestPointOnLine(startPoint.position, endPoint.position, df.transform.position);
@@ -61,20 +72,27 @@ public class AirStream : MonoBehaviour
             {
                 //leaving this Detection Range
                 df.leftDetectionRange(this);
-            }                
+            }
             else if (dist < thickness)
             {
                 if (!df.isInAirstream || (df.currentAirStream != this && !isClostestAirstream(df, this, df.currentAirStream)))
                 {
-                    if (df.currentAirStream != null)
+                    if (df.isInAirstream)
                     {
-                        //Entering this airstream, makes the deltaflyer leave the other airstream
+                        //entering this airstream makes it leave the other
                         df.leftAirstream();
                     }
 
                     //entering this Airstream
                     df.enteredAirstream(this);
+                 
                 }
+
+                //if (df.currentAirStream == null)
+                //{
+                //    //player is in 2 airstreams and left one, which makes the currentairstream null, but player is still in an airstream
+                //    df.enteredAirstream(this);
+                //}
 
                 if (df.currentAirStream == this)
                 {
@@ -85,7 +103,7 @@ public class AirStream : MonoBehaviour
             }
             else if (dist < (thickness * _AlertMultiplyer))
             {
-               
+
                 if (!df.isInDetectionRange || !df.detectedAirStreams.Contains(this))
                 {
                     //if (df.currentAirStream != null)
@@ -98,6 +116,11 @@ public class AirStream : MonoBehaviour
                     df.enteredDetectionRange(this);
                 }
 
+                if (df.detectedAirStream == null)
+                {
+                    df.enteredDetectionRange(this);
+                }
+
                 if (df.detectedAirStream == this && !df.isInAirstream)
                 {
                     //Deltaflyer is near this airStream
@@ -105,41 +128,48 @@ public class AirStream : MonoBehaviour
                     df.detectAirstream(this, closestPoint);
                 }
             }
-              
-             
         }
     }
 
-    public void enterParticleStream(DeltaFlyer df, Transform movingToPoint)
+    public void enterParticleStream(DeltaFlyer df)
     {
-        ps.transform.position = getOtherPoint(movingToPoint).position;
-        ps.transform.LookAt(movingToPoint);
-        ps.Play();
+        Transform movingDir = getMovingToPoint(df);
+        Particles.transform.position = getOtherPoint(movingDir).position;
+        Particles.transform.LookAt(movingDir);
+
+        foreach (ParticleSystem ps in pSystems)
+        {
+            ps.Play();
+        }
+
     }
 
     public void leaveParticleStream(DeltaFlyer df)
     {
-        ps.Stop();
+        foreach (ParticleSystem ps in pSystems)
+        {
+            ps.Stop();
+        }
     }
 
     public Transform getMovingToPoint(DeltaFlyer df)
     {
-        float startAngle = Vector3.Angle(startPoint.position, df.transform.forward);
-        float endAngle = Vector3.Angle(endPoint.position, df.transform.forward);
+        Vector3 forwardVector = endPoint.position - startPoint.position;
+        float angle = Vector3.Angle(forwardVector, df.transform.forward);
 
-        if (startAngle < endAngle)
+        if(angle <= 90)
         {
-            return startPoint;
+            return endPoint;
         }
         else
         {
-            return endPoint;
+            return startPoint;
         }
     }
 
     public Transform getOtherPoint(Transform point)
     {
-        if(point.position == startPoint.position)
+        if (point.position == startPoint.position)
         {
             return endPoint;
         }
@@ -232,7 +262,7 @@ public class AirStream : MonoBehaviour
             Gizmos.DrawSphere(tempClosestPointOnLine, 0.3f);
             Gizmos.color = Color.blue;
             Gizmos.DrawLine(startPoint.position, endPoint.position);
-           
+
         }
 
     }

@@ -163,29 +163,27 @@ public class DeltaFlyer : MonoBehaviour
     /// <param name="movingDirection"></param>
     public void enteredAirstream(AirStream stream)
     {
+        if (isInAirstream) return;
+
         stream.inAirstream.Add(this);
         currentAirStream = stream;
         detectedAirStream = stream;
-
-        Transform movingDir = stream.getMovingToPoint(this);
+        
         foreach (AirStream tempStream in detectedAirStreams)
         {
-            tempStream.enterParticleStream(this, stream.getOtherPoint(movingDir));
+            if (tempStream != stream)
+            {
+                tempStream.enterParticleStream(this);
+            }
         }
-        detectedAirStream.enterParticleStream(this, movingDir);
 
-        inputMngr.velocity *= 2;
+        stream.enterParticleStream(this);
 
         foreach (ContactPoint cp in contactPoints)
         {
             cp.force = 40;
         }
-        CameraScript.instance.EneteredAirstream();
-
-        //foreach (AirStream tmpAs in detectedAirStreams)
-        //{
-        //    tmpAs.notifyParticles.gameObject.SetActive(true);
-        //}
+        CameraScript.instance.EneteredAirstream();       
     }
 
     /// <summary>
@@ -202,7 +200,6 @@ public class DeltaFlyer : MonoBehaviour
         currentAirStream.inAirstream.Remove(this);
         currentAirStream = null;
 
-        inputMngr.velocity /= 2;
         CameraScript.instance.LeftAirstream();
 
         //foreach (AirStream tmpAs in detectedAirStreams)
@@ -235,7 +232,7 @@ public class DeltaFlyer : MonoBehaviour
         if (isInAirstream && !detectedAirStreams.Contains(stream) && stream != detectedAirStream)
         {
             //user is in an airstream and detected by another airstream
-            stream.enterParticleStream(this, stream.getOtherPoint(detectedAirStream.ps.transform));
+            stream.enterParticleStream(this);
         }
 
         detectedAirStreams.Add(stream);
