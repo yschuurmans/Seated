@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class DeltaFlyer : MonoBehaviour
 {
-
     public Raptor raptor;
 
     public Transform spawnPoint;
@@ -83,13 +82,11 @@ public class DeltaFlyer : MonoBehaviour
         //if (currentAirStream != null) placeParticleSystem(currentAirStream, movingDirection, currentAirStream.getClosestPoint(this), ps);
     }
 
-
-
     public void Respawn()
     {
         transform.position = spawnPoint.position;
         transform.rotation = spawnPoint.rotation;
-        // transform.SetPositionAndRotation(spawnPoint.position,spawnPoint.rotation);
+       // transform.SetPositionAndRotation(spawnPoint.position,spawnPoint.rotation);
     }
 
     public void resetMotors()

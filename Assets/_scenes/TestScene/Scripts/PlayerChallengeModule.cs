@@ -120,9 +120,9 @@ public class PlayerChallengeModule : MonoBehaviour
             return;
         }
 
-        CurrentTargetLocation = ActiveChallenge.LocationsInOrder.Values.FirstOrDefault(l => l.SequenceIndex == enteredLocation.SequenceIndex + 1);
+        CurrentTargetLocation = ActiveChallenge.LocationsInOrder.Values.FirstOrDefault(l=>l.SequenceIndex == enteredLocation.SequenceIndex + 1);
 
-        //DeltaFlyer.spawnPoint = enteredLocation.transform;
+        DeltaFlyer.spawnPoint = enteredLocation.transform;
         //Transform spawn = DeltaFlyer.spawnPoint;
         //spawn.transform.position = enteredLocation.transform.position;
         //spawn.transform.LookAt(CurrentTargetLocation.transform);
@@ -144,6 +144,7 @@ public class PlayerChallengeModule : MonoBehaviour
         }
         OnPlayerCompletedChallenge(this);
         Challenge.ChallengeMedal medal = ActiveChallenge.GetAchievedMedal(elapsedTime);
+
         if (TextField != null)
         {
             TextField.text = medal == Challenge.ChallengeMedal.None ? "You were too slow! Better luck next time!" : "Congratulations, you received a " + medal + " medal with a time of " + elapsedTime + " seconds!";
