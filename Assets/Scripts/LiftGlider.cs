@@ -96,7 +96,8 @@ public class LiftGlider : MonoBehaviour
 
         LocalVelocity += Physics.gravity * rb.mass * (GravModifier * GravModifierImpact);
 
-        rb.velocity = LocalVelocity;
+        if (!float.IsNaN(LocalVelocity.x))
+            rb.velocity = LocalVelocity;
 
         if (GameManager.instance.DebugMode)
         {

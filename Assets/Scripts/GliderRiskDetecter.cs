@@ -27,15 +27,15 @@ public class GliderRiskDetecter : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        if (Time.time - Boost.Glider.LastBump > 5)
+        if (Time.time - Glider.LastBump > 5)
         {
-            if (other.CompareTag("Ground")) Boost.AddBoost(GroundBoostPerSec * Time.deltaTime * Mathf.Clamp01((Boost.Glider.Velocity - minVelocity) / (maxVelocity - minVelocity)));
+            if (other.CompareTag("Ground")) Boost.AddBoost(GroundBoostPerSec * Time.deltaTime * Mathf.Clamp01((Glider.Velocity - minVelocity) / (maxVelocity - minVelocity)));
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (Time.time - Boost.Glider.LastBump > 5)
+        if (Time.time - Glider.LastBump > 5)
         {
             if (other.CompareTag("Tree")) Boost.AddBoost(TreeBoost);
         }

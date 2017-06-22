@@ -98,20 +98,7 @@ public class InputManager : MonoBehaviour
         //flyObject.angularVelocity = Vector3.Lerp(flyObject.angularVelocity, Vector3.zero, 0.1f);
 
         //transform.Rotate(new Vector3(0, 0, -state.ThumbSticks.Right.X));
-        transform.Rotate(new Vector3(state.ThumbSticks.Right.Y, 0, -state.ThumbSticks.Right.X));
-        if (/*GameManager.instance.DebugMode*/JawEnabled == JawMode.Enabled)
-        {
-            transform.Rotate(new Vector3(0, state.ThumbSticks.Left.X, 0));
-        }
-        if (/*GameManager.instance.DebugMode*/JawEnabled == JawMode.Half)
-        {
-            transform.Rotate(new Vector3(0, state.ThumbSticks.Left.X * 0.5f, 0));
-        }
-        if (/*GameManager.instance.DebugMode*/JawEnabled == JawMode.Quarter)
-        {
-            transform.Rotate(new Vector3(0, state.ThumbSticks.Left.X * 0.25f, 0));
-        }
-        //transform.Rotate(new Vector3(0, state.ThumbSticks.Left.X, 0));
+        transform.Rotate(new Vector3(state.ThumbSticks.Right.Y, state.ThumbSticks.Left.X * 0.25f, -state.ThumbSticks.Right.X));
 
         if (GameManager.instance.DebugMode)
         {
