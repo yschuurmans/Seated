@@ -112,8 +112,8 @@ public class AirStream : MonoBehaviour
 
     public void enterParticleStream(DeltaFlyer df, Transform movingToPoint)
     {
-        ps.transform.position = movingToPoint.position;
-        ps.transform.LookAt(getOtherPoint(movingToPoint));
+        ps.transform.position = getOtherPoint(movingToPoint).position;
+        ps.transform.LookAt(movingToPoint);
         ps.Play();
     }
 

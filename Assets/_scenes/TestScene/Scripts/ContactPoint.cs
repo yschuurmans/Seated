@@ -41,6 +41,9 @@ public class ContactPoint : MonoBehaviour
 
     void OnDrawGizmos()
     {
+        Gizmos.color = Color.white;
+        Gizmos.DrawSphere(transform.position, 0.05f);
+
         if (!Application.isPlaying) return;
 
         Gizmos.color = ColorHelper.GetLerpedColor(Color.red, Color.green, GetForce / ushort.MaxValue);

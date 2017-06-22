@@ -56,13 +56,10 @@ namespace Assets._resources.Scripts.ChallengeScripts
             while (ShowMarker)
             {
                 Vector3 pos = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, 0, 0));
-                if (screenRect.Contains(pos))
+                if (screenRect.Contains(pos) && pos.z >= 0)
                 {
-                    if (pos.z >= 0)
-                    {
-                        WorldWaypointMarker.transform.position = transform.position;
-                        WorldWaypointMarker.transform.LookAt(player.transform);
-                    }
+                    WorldWaypointMarker.transform.position = transform.position;
+                    WorldWaypointMarker.transform.LookAt(Camera.main.transform.position);
 
                     if (!WorldWaypointMarker.activeSelf) WorldWaypointMarker.SetActive(true);
                     if (ScreenWaypointMarker.activeSelf) ScreenWaypointMarker.SetActive(false);

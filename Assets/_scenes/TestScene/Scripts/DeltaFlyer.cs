@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class DeltaFlyer : MonoBehaviour
 {
-
     public Raptor raptor;
 
     public Transform spawnPoint;
@@ -83,13 +82,11 @@ public class DeltaFlyer : MonoBehaviour
         //if (currentAirStream != null) placeParticleSystem(currentAirStream, movingDirection, currentAirStream.getClosestPoint(this), ps);
     }
 
-
-
     public void Respawn()
     {
         transform.position = spawnPoint.position;
         transform.rotation = spawnPoint.rotation;
-        // transform.SetPositionAndRotation(spawnPoint.position,spawnPoint.rotation);
+       // transform.SetPositionAndRotation(spawnPoint.position,spawnPoint.rotation);
     }
 
     public void resetMotors()
@@ -166,7 +163,6 @@ public class DeltaFlyer : MonoBehaviour
     /// <param name="movingDirection"></param>
     public void enteredAirstream(AirStream stream)
     {
-        Debug.Log("entered an airstream");
         stream.inAirstream.Add(this);
         currentAirStream = stream;
         detectedAirStream = stream;
@@ -184,6 +180,7 @@ public class DeltaFlyer : MonoBehaviour
         {
             cp.force = 40;
         }
+        CameraScript.instance.EneteredAirstream();
 
         //foreach (AirStream tmpAs in detectedAirStreams)
         //{
@@ -206,6 +203,7 @@ public class DeltaFlyer : MonoBehaviour
         currentAirStream = null;
 
         inputMngr.velocity /= 2;
+        CameraScript.instance.LeftAirstream();
 
         //foreach (AirStream tmpAs in detectedAirStreams)
         //{
@@ -253,7 +251,6 @@ public class DeltaFlyer : MonoBehaviour
         detectedAirStreams.Remove(stream);
         stream.inDetectionRange.Remove(this);
         stream.leaveParticleStream(this);
-
         detectedAirstreamsCount--;
     }
 
