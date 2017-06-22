@@ -1470,7 +1470,7 @@ ParticleSystem:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 775592863}
   serializedVersion: 5
-  lengthInSec: 5
+  lengthInSec: 100000
   simulationSpeed: 1
   looping: 1
   prewarm: 0
@@ -1518,7 +1518,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1645217612
+  randomSeed: 1717105700
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -9349,25 +9349,30 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4324025916133558, guid: ad833e2a2245d0947864cbce062b9c12, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 399.6
+    - target: {fileID: 198431055077229922, guid: ad833e2a2245d0947864cbce062b9c12,
+        type: 2}
+      propertyPath: randomSeed
+      value: 733567351
       objectReference: {fileID: 0}
-    - target: {fileID: 4324025916133558, guid: ad833e2a2245d0947864cbce062b9c12, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -0
+    - target: {fileID: 198431055077229922, guid: ad833e2a2245d0947864cbce062b9c12,
+        type: 2}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 10
       objectReference: {fileID: 0}
-    - target: {fileID: 4217865084303030, guid: ad833e2a2245d0947864cbce062b9c12, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 25.9
+    - target: {fileID: 198431055077229922, guid: ad833e2a2245d0947864cbce062b9c12,
+        type: 2}
+      propertyPath: lengthInSec
+      value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 4217865084303030, guid: ad833e2a2245d0947864cbce062b9c12, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: -326.8
+    - target: {fileID: 198431055077229922, guid: ad833e2a2245d0947864cbce062b9c12,
+        type: 2}
+      propertyPath: InitialModule.maxNumParticles
+      value: 1000
       objectReference: {fileID: 0}
-    - target: {fileID: 4217865084303030, guid: ad833e2a2245d0947864cbce062b9c12, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 3.6
+    - target: {fileID: 198431055077229922, guid: ad833e2a2245d0947864cbce062b9c12,
+        type: 2}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ad833e2a2245d0947864cbce062b9c12, type: 2}

@@ -204,6 +204,7 @@ public class DeltaFlyer : MonoBehaviour
         currentAirStream.leaveParticleStream(this);
         currentAirStream.inAirstream.Remove(this);
         currentAirStream = null;
+        Debug.Log("left airstream");
 
         inputMngr.velocity /= 2;
 
@@ -253,7 +254,7 @@ public class DeltaFlyer : MonoBehaviour
         detectedAirStreams.Remove(stream);
         stream.inDetectionRange.Remove(this);
         stream.leaveParticleStream(this);
-
+        Debug.Log("Left detection range");
         detectedAirstreamsCount--;
     }
 
