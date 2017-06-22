@@ -1735,7 +1735,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d80741f0e8845cd4fa8f43034b7cdbfe, type: 3}
   - {fileID: 8300000, guid: d2b0805b58e5e434fbb244fc51f45ef3, type: 3}
   - {fileID: 8300000, guid: 6ee4014a53c233e47a70200ab12ed5d7, type: 3}
-  playSounds: 1
   audioSources: 16
 --- !u!1 &1012533919
 GameObject:
@@ -2415,7 +2414,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Settings
+  m_Text: Music
 --- !u!222 &1307139720
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3426,12 +3425,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: 
+      - m_Target: {fileID: 1012174054}
+        m_MethodName: ToggleMusic
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

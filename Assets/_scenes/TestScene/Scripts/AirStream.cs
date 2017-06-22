@@ -108,8 +108,9 @@ public class AirStream : MonoBehaviour
                     df.detectAirstream(this, closestPoint);
                 }
             }
-              
-             
+
+            if (df.isInAirstream) sm.PlayWind();
+            else sm.StopWind();
         }
     }
 
@@ -118,13 +119,11 @@ public class AirStream : MonoBehaviour
         ps.transform.position = getOtherPoint(movingToPoint).position;
         ps.transform.LookAt(movingToPoint);
         ps.Play();
-        sm.PlayWind();
     }
 
     public void leaveParticleStream(DeltaFlyer df)
     {
         ps.Stop();
-        if (!df.isInAirstream) sm.StopWind();
     }
 
     public Transform getMovingToPoint(DeltaFlyer df)

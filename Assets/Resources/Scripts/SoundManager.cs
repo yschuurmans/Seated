@@ -16,7 +16,8 @@ public class SoundManager : MonoBehaviour
     AudioSource sfxSounds;
     AudioSource ambienceSounds;
 
-    public bool playSounds = false;
+    bool playSounds = true;
+    bool playMusic = false;
     public int audioSources = 16;
 
     // Use this for initialization
@@ -37,34 +38,32 @@ public class SoundManager : MonoBehaviour
         
         ambienceSounds.clip = Ambience;
 
-        ambienceSounds.volume = 0.2f;
-        WindSource.volume = 0.6f;
+        ambienceSounds.volume = 0.3f;
+        WindSource.volume = 0.4f;
+        sfxSounds.volume = 0.2f;
         WindSource.clip = Wind;
         WindSource.loop = true;
-        sfxSounds.volume = 0.1f;
+
     }
 
     void Start()
     {
-        if (playSounds) ambienceSounds.Play();
+        if (playMusic) ambienceSounds.Play();
     }
 
     void Update()
     {
-        if (playSounds && Random.value < 0.002)
+        if (Random.value < 0.002 && playSounds)
         {
             RandomSound();
         }
-
-        
-
     }
 
     public void RandomSound()
     {
         float randomPitch = Random.Range(.90f, 1.1f);
         int randomIndex = Random.Range(0, randomSounds.Length);
-        AudioSource source = findAudioSource();
+        AudioSource source = FindAudioSource();
         source.clip = randomSounds[randomIndex];
         source.volume = 0.2f;
         source.Play();
@@ -74,7 +73,7 @@ public class SoundManager : MonoBehaviour
     {
         float randomPitch = Random.Range(.90f, 1.1f);
         WindSource.pitch = randomPitch;
-        WindSource.Play();
+        if (playSounds && !WindSource.isPlaying) WindSource.Play();
     }
 
     public void StopWind()
@@ -82,18 +81,16 @@ public class SoundManager : MonoBehaviour
         WindSource.Stop();
     }
 
-
-
     public void PlayClick()
     {
         float randomPitch = Random.Range(.94f, 1.06f);
-        AudioSource source = findAudioSource();
+        AudioSource source = FindAudioSource();
         source.clip = Click;
         source.pitch = randomPitch;
-        source.Play();
+        if (playSounds) source.Play();
     }
 
-    AudioSource findAudioSource()
+    AudioSource FindAudioSource()
     {
         AudioSource source = null;
         for (int i = 0; i < audioSources; i++)
@@ -102,6 +99,22 @@ public class SoundManager : MonoBehaviour
         }
 
         return source;
+    }
+
+    public void ToggleMusic()
+    {
+        if (playMusic) DisableMusic();
+        else EnableMusic();
+    }
+    void EnableMusic()
+    {
+        playMusic = true;
+        ambienceSounds.Play();
+    }
+    void DisableMusic()
+    {
+        playMusic = false;
+        ambienceSounds.Stop();
     }
 
 }
