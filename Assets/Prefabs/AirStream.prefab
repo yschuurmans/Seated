@@ -112,8 +112,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1121033337231374}
-  m_LocalRotation: {x: -0.009707372, y: 0.70878965, z: 0.0097556, w: 0.7052856}
-  m_LocalPosition: {x: -326.8, y: 25.9, z: 3.6}
+  m_LocalRotation: {x: 0.009755601, y: -0.70528567, z: 0.009707373, w: 0.7087897}
+  m_LocalPosition: {x: 399.6, y: 45.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1.2656008}
   m_Children: []
   m_Father: {fileID: 4916220899358078}
@@ -258,10 +258,11 @@ MonoBehaviour:
   endPoint: {fileID: 4217865084303030}
   _MaxAlertForcePerc: 40
   _MinAlertForcePerc: 5
-  closestPointOnLineTemp: {x: -687.49585, y: 25.908375, z: 3.5984926}
+  closestPointOnLineTemp: {x: -398.16696, y: 33.87448, z: 2.164594}
   force: 100
   ps: {fileID: 198431055077229922}
   inAirstream:
+  - {fileID: 0}
   - {fileID: 0}
   inDetectionRange:
   - {fileID: 0}
@@ -321,7 +322,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -944771976
+  randomSeed: 1648040659
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -653,7 +654,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 100
+    maxNumParticles: 1000
     size3D: 0
     rotation3D: 0
     gravityModifier:
