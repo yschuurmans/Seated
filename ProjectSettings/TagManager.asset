@@ -19,7 +19,7 @@ TagManager:
   - AirstreamParticleCollision
   - VisibleLocation
   - InvisibleLocation
-  - StartLocations
+  - StartLocation
   - 
   - 
   - 

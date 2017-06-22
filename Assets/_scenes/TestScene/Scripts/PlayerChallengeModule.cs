@@ -63,13 +63,11 @@ public class PlayerChallengeModule : MonoBehaviour
             //Make challenge start triggers visible to camera depending on if player is currently in a challenge
             if (value == null)
             {
-                CameraCullingMaskHelper.ShowLayer("StartLocation");
-                //Camera.main.cullingMask |= 1 << LayerMask.NameToLayer("ChallengeStart");
-                ShowStartLocations();
+                ToggleStartLocationVisibility(true);
             }
             else
             {
-                CameraCullingMaskHelper.HideLayer("StartLocation");
+                ToggleStartLocationVisibility(false);
                 //Camera.main.cullingMask &= ~(1 << LayerMask.NameToLayer("ChallengeStart"));
             }
 
@@ -84,7 +82,7 @@ public class PlayerChallengeModule : MonoBehaviour
 
     void Start()
     {
-        ShowStartLocations();
+        ToggleStartLocationVisibility(true);
     }
 
     void Update()
@@ -94,10 +92,15 @@ public class PlayerChallengeModule : MonoBehaviour
             TextField.text = "Time: \t" + (Time.time - StartTime);
         }
     }
-    private void ShowStartLocations()
+    private void ToggleStartLocationVisibility(bool setVisible)
     {
-        CurrentTargetLocation = ChallengeController.Instance.Challenge.LocationsInOrder.First(
-                    loc => loc.Value.Type == Location.LocationType.Start).Value;
+        if(setVisible)
+            CameraCullingMaskHelper.ShowLayer("StartLocation");
+        else
+            CameraCullingMaskHelper.HideLayer("StartLocation");
+
+        //CurrentTargetLocation = ChallengeController.Instance.Challenge.LocationsInOrder.First(
+        //            loc => loc.Value.Type == Location.LocationType.Start).Value;
     }
 
 
