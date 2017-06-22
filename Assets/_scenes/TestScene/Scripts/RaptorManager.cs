@@ -93,7 +93,7 @@ public class RaptorManager : MonoBehaviour
         }*/
     }
 
-    private void initWave()
+    private void initWave() 
     {
 
         waveHeadPos = waveLength * 0.125;

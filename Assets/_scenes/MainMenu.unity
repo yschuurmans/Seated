@@ -1726,7 +1726,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Click: {fileID: 8300000, guid: 0c887a8ebc8d2a9458ba2d92af0e9ac4, type: 3}
-  Wind: {fileID: 0}
+  Wind: {fileID: 8300000, guid: 518270c175a9c7e48b0b9fe09d4eb5cd, type: 3}
   Ambience: {fileID: 8300000, guid: 185e5678a66d5664ca33c6c275297a77, type: 3}
   randomSounds:
   - {fileID: 8300000, guid: 73efc815479cc184596c2f61c660b7da, type: 3}
@@ -1736,6 +1736,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d2b0805b58e5e434fbb244fc51f45ef3, type: 3}
   - {fileID: 8300000, guid: 6ee4014a53c233e47a70200ab12ed5d7, type: 3}
   playSounds: 1
+  audioSources: 16
 --- !u!1 &1012533919
 GameObject:
   m_ObjectHideFlags: 0

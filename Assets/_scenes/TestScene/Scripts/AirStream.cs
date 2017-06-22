@@ -19,6 +19,7 @@ public class AirStream : MonoBehaviour
     private List<ContactPoint> knownContactPoints = new List<ContactPoint>();
 
     public ParticleSystem ps;
+    SoundManager sm;
 
     public List<DeltaFlyer> inAirstream = new List<DeltaFlyer>();
     public List<DeltaFlyer> inDetectionRange = new List<DeltaFlyer>();
@@ -41,6 +42,8 @@ public class AirStream : MonoBehaviour
 
         endPoint.LookAt(startPoint);
         endPoint.transform.Rotate(90, 0, 0);
+
+        sm = FindObjectOfType<SoundManager>();
     }
 
 
@@ -115,11 +118,13 @@ public class AirStream : MonoBehaviour
         ps.transform.position = getOtherPoint(movingToPoint).position;
         ps.transform.LookAt(movingToPoint);
         ps.Play();
+        sm.PlayWind();
     }
 
     public void leaveParticleStream(DeltaFlyer df)
     {
         ps.Stop();
+        if (!df.isInAirstream) sm.StopWind();
     }
 
     public Transform getMovingToPoint(DeltaFlyer df)
