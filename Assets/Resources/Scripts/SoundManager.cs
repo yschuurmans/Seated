@@ -10,16 +10,27 @@ public class SoundManager : MonoBehaviour
     public AudioClip Ambience;
     public AudioClip[] randomSounds;
 
-    public bool playSounds = true;
+    AudioSource[] audioPool;
 
-    AudioSource InteractSounds;
+    AudioSource WindSource;
     AudioSource sfxSounds;
     AudioSource ambienceSounds;
+
+    bool playSounds = true;
+    bool playMusic = false;
+    public int audioSources = 16;
 
     // Use this for initialization
     void Awake()
     {
-        InteractSounds = gameObject.AddComponent<AudioSource>();
+        audioPool = new AudioSource[audioSources];
+
+        for (int i = 0; i < audioSources; i++)
+        {
+            audioPool[i] = gameObject.AddComponent<AudioSource>();
+        }
+
+        WindSource = gameObject.AddComponent<AudioSource>();
         sfxSounds = gameObject.AddComponent<AudioSource>();
         ambienceSounds = gameObject.AddComponent<AudioSource>();
 
@@ -27,19 +38,22 @@ public class SoundManager : MonoBehaviour
         
         ambienceSounds.clip = Ambience;
 
-        ambienceSounds.volume = 0.6f;
-        InteractSounds.volume = 0.4f;
-        sfxSounds.volume = 0.1f;
+        ambienceSounds.volume = 0.3f;
+        WindSource.volume = 0.4f;
+        sfxSounds.volume = 0.2f;
+        WindSource.clip = Wind;
+        WindSource.loop = true;
+
     }
 
     void Start()
     {
-        ambienceSounds.Play();
+        if (playMusic) ambienceSounds.Play();
     }
 
     void Update()
     {
-        if (playSounds && !sfxSounds.isPlaying && Random.value < 0.001)
+        if (Random.value < 0.002 && playSounds)
         {
             RandomSound();
         }
@@ -49,24 +63,58 @@ public class SoundManager : MonoBehaviour
     {
         float randomPitch = Random.Range(.90f, 1.1f);
         int randomIndex = Random.Range(0, randomSounds.Length);
-        sfxSounds.clip = randomSounds[randomIndex];
-        sfxSounds.Play();
+        AudioSource source = FindAudioSource();
+        source.clip = randomSounds[randomIndex];
+        source.volume = 0.2f;
+        source.Play();
     }
 
     public void PlayWind()
     {
-        InteractSounds.pitch = 1;
-        InteractSounds.clip = Wind;
-        InteractSounds.Play();
+        float randomPitch = Random.Range(.90f, 1.1f);
+        WindSource.pitch = randomPitch;
+        if (playSounds && !WindSource.isPlaying) WindSource.Play();
+    }
+
+    public void StopWind()
+    {
+        WindSource.Stop();
     }
 
     public void PlayClick()
     {
-        InteractSounds.clip = Click;
         float randomPitch = Random.Range(.94f, 1.06f);
-        InteractSounds.pitch = randomPitch;
-        InteractSounds.Play();
+        AudioSource source = FindAudioSource();
+        source.clip = Click;
+        source.pitch = randomPitch;
+        if (playSounds) source.Play();
     }
 
+    AudioSource FindAudioSource()
+    {
+        AudioSource source = null;
+        for (int i = 0; i < audioSources; i++)
+        {
+            if (!audioPool[i].isPlaying) source = audioPool[i];
+        }
+
+        return source;
+    }
+
+    public void ToggleMusic()
+    {
+        if (playMusic) DisableMusic();
+        else EnableMusic();
+    }
+    void EnableMusic()
+    {
+        playMusic = true;
+        ambienceSounds.Play();
+    }
+    void DisableMusic()
+    {
+        playMusic = false;
+        ambienceSounds.Stop();
+    }
 
 }

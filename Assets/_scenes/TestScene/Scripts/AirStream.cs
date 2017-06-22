@@ -19,6 +19,7 @@ public class AirStream : MonoBehaviour
     private List<ContactPoint> knownContactPoints = new List<ContactPoint>();
 
     public ParticleSystem ps;
+    SoundManager sm;
 
     public List<DeltaFlyer> inAirstream = new List<DeltaFlyer>();
     public List<DeltaFlyer> inDetectionRange = new List<DeltaFlyer>();
@@ -41,6 +42,8 @@ public class AirStream : MonoBehaviour
 
         endPoint.LookAt(startPoint);
         endPoint.transform.Rotate(90, 0, 0);
+
+        sm = FindObjectOfType<SoundManager>();
     }
 
 
@@ -105,8 +108,9 @@ public class AirStream : MonoBehaviour
                     df.detectAirstream(this, closestPoint);
                 }
             }
-              
-             
+
+            if (df.isInAirstream) sm.PlayWind();
+            else sm.StopWind();
         }
     }
 
