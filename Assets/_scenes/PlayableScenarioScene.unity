@@ -213,6 +213,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 539414193}
+  - {fileID: 67144572}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1263,6 +1264,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 552777243}
+  - component: {fileID: 552777244}
   m_Layer: 14
   m_Name: Challenges
   m_TagString: Untagged
@@ -1284,6 +1286,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &552777244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 552777242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e911cc09277b924980f6fb1d036d976, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Challenge: {fileID: 0}
 --- !u!1 &705328994
 GameObject:
   m_ObjectHideFlags: 0
@@ -4680,9 +4694,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1733671633}
-  - component: {fileID: 809721728}
   - component: {fileID: 809721727}
-  - component: {fileID: 809721726}
   - component: {fileID: 809721724}
   m_Layer: 14
   m_Name: ChallengeStart
@@ -4707,39 +4719,6 @@ MonoBehaviour:
   SequenceIndex: 0
   ScreenWaypointMarker: {fileID: 539414192}
   WorldWaypointMarker: {fileID: 1088883910}
---- !u!23 &809721726
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 23361756239901230, guid: af0093e42f06efe498fd542fd165db2f,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 809721723}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 1
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
 --- !u!135 &809721727
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -4753,14 +4732,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 10
   m_Center: {x: 0, y: 0, z: 0}
---- !u!33 &809721728
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 33065766679312360, guid: af0093e42f06efe498fd542fd165db2f,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 809721723}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &817006925
 GameObject:
   m_ObjectHideFlags: 0
@@ -5134,6 +5105,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DeltaFlyer: {fileID: 907030647}
+  TextField: {fileID: 67144573}
   StartTime: 0
 --- !u!65 &907030650
 BoxCollider:

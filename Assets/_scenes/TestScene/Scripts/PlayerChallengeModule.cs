@@ -5,6 +5,7 @@ using System.Linq;
 using Assets.TestScene.Scripts.HelperClasses;
 using Assets._resources.Scripts.ChallengeScripts;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerChallengeModule : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class PlayerChallengeModule : MonoBehaviour
 
     //Completed challenges with fastest achieved time
     public Dictionary<Challenge, float> CompletedChallengeResults = new Dictionary<Challenge, float>();
+
+    public Text TextField;
 
     //Current Challenge Variables
     public float StartTime;
@@ -62,6 +65,7 @@ public class PlayerChallengeModule : MonoBehaviour
             {
                 CameraCullingMaskHelper.ShowLayer("StartLocation");
                 //Camera.main.cullingMask |= 1 << LayerMask.NameToLayer("ChallengeStart");
+                ShowStartLocations();
             }
             else
             {
@@ -77,6 +81,25 @@ public class PlayerChallengeModule : MonoBehaviour
     {
         DeltaFlyer = GetComponent<DeltaFlyer>();
     }
+
+    void Start()
+    {
+        ShowStartLocations();
+    }
+
+    void Update()
+    {
+        if (ActiveChallenge != null && TextField != null)
+        {
+            TextField.text = "Time: \t" + (Time.time - StartTime);
+        }
+    }
+    private void ShowStartLocations()
+    {
+        CurrentTargetLocation = ChallengeController.Instance.Challenge.LocationsInOrder.First(
+                    loc => loc.Value.Type == Location.LocationType.Start).Value;
+    }
+
 
     public void StartChallenge(Challenge challenge)
     {
@@ -121,7 +144,11 @@ public class PlayerChallengeModule : MonoBehaviour
         }
         OnPlayerCompletedChallenge(this);
         Challenge.ChallengeMedal medal = ActiveChallenge.GetAchievedMedal(elapsedTime);
-        Debug.Log("Player achieved a " + medal + " medal!");
+        if (TextField != null)
+        {
+            TextField.text = medal == Challenge.ChallengeMedal.None ? "You were too slow! Better luck next time!" : "Congratulations, you received a " + medal + " medal with a time of " + elapsedTime + " seconds!";
+            Debug.Log("Player achieved a " + medal + " medal!");
+        }
         ActiveChallenge = null;
     }
 }
