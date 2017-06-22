@@ -213,7 +213,6 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 539414193}
-  - {fileID: 67144572}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1424,6 +1423,7 @@ GameObject:
   - component: {fileID: 707801013}
   - component: {fileID: 707801012}
   - component: {fileID: 707801011}
+  - component: {fileID: 707801015}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1439,7 +1439,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 707801009}
   m_LocalRotation: {x: 0.043619405, y: 0, z: 0, w: 0.9990483}
-  m_LocalPosition: {x: 0, y: 3, z: -20}
+  m_LocalPosition: {x: -0, y: 0.274, z: -0.007}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 907030644}
@@ -1486,7 +1486,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.02
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -1506,6 +1506,21 @@ Camera:
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
   m_StereoMirrorMode: 0
+--- !u!114 &707801015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 707801009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d129b634c223305448a66ed4712e29fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  doShake: 1
+  normalShake: 0.001
+  airStreamShake: 0.002
+  decreaseFactor: 1
 --- !u!1 &775592863
 GameObject:
   m_ObjectHideFlags: 0
@@ -1646,7 +1661,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1717105700
+  randomSeed: 422888381
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -5105,7 +5120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DeltaFlyer: {fileID: 907030647}
-  TextField: {fileID: 67144573}
+  TextField: {fileID: 0}
   StartTime: 0
 --- !u!65 &907030650
 BoxCollider:

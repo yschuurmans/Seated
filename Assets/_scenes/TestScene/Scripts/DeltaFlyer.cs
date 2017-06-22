@@ -166,7 +166,6 @@ public class DeltaFlyer : MonoBehaviour
     /// <param name="movingDirection"></param>
     public void enteredAirstream(AirStream stream)
     {
-        Debug.Log("entered an airstream");
         stream.inAirstream.Add(this);
         currentAirStream = stream;
         detectedAirStream = stream;
@@ -184,6 +183,7 @@ public class DeltaFlyer : MonoBehaviour
         {
             cp.force = 40;
         }
+        CameraScript.instance.EneteredAirstream();
 
         //foreach (AirStream tmpAs in detectedAirStreams)
         //{
@@ -204,9 +204,9 @@ public class DeltaFlyer : MonoBehaviour
         currentAirStream.leaveParticleStream(this);
         currentAirStream.inAirstream.Remove(this);
         currentAirStream = null;
-        Debug.Log("left airstream");
 
         inputMngr.velocity /= 2;
+        CameraScript.instance.LeftAirstream();
 
         //foreach (AirStream tmpAs in detectedAirStreams)
         //{
@@ -254,7 +254,6 @@ public class DeltaFlyer : MonoBehaviour
         detectedAirStreams.Remove(stream);
         stream.inDetectionRange.Remove(this);
         stream.leaveParticleStream(this);
-        Debug.Log("Left detection range");
         detectedAirstreamsCount--;
     }
 
