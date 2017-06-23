@@ -23,9 +23,10 @@ public class GliderRiskDetecter : MonoBehaviour
     {
         if (Glider.Velocity > SpeedBoostMinVelocity)
             Boost.AddBoost(Mathf.Clamp01((Glider.Velocity - SpeedBoostMinVelocity) / (SpeedBoostMaxClamp - SpeedBoostMinVelocity)) * Time.deltaTime * 2f);
-        if (Time.time - Glider.LastBump > 10)
+
+        if (Time.time - Glider.LastBump > 10 && Time.time - Boost.LastBoost > 5)
         {
-            Boost.AddBoost(Glider.Velocity / 100 * Time.deltaTime);
+            Boost.AddBoost(Glider.Velocity / 100 * Time.deltaTime * (1-Boost.Boost / Boost.MaxBoost));
         }
     }
 

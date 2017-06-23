@@ -9,6 +9,7 @@ public class GliderBoost : MonoBehaviour
     public float MaxBoost;
     public float BoostMultiplier;
     public Transform BoostBar;
+    public float LastBoost;
 
     private float StartLength;
 
@@ -41,6 +42,7 @@ public class GliderBoost : MonoBehaviour
 
     public void UseBoost(float value)
     {
+        LastBoost = Time.time;
         if (Boost > value * Time.deltaTime)
         {
             Glider.AddLift(1 * BoostMultiplier * Time.deltaTime * value * boostBonus);
