@@ -10,7 +10,7 @@ namespace Assets._resources.Scripts.ChallengeScripts
     {
         public static ChallengeController Instance;
 
-        public Challenge Challenge;
+        public List<Challenge> Challenge;
 
         void Awake()
         {
@@ -20,7 +20,7 @@ namespace Assets._resources.Scripts.ChallengeScripts
             {
                 Destroy(this.gameObject);
             }
-            Challenge = GetComponentInChildren<Challenge>();
+            Challenge = GetComponentsInChildren<Challenge>().ToList();
         }
     }
 }

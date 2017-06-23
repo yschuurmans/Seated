@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,8 +13,12 @@ public class LiftGlider : MonoBehaviour
     public float GravModifierImpact = 1f;
     public float LiftGravModifier = 1f;
 
-    //public Text debugText1;
-    //public Text debugText2;
+    public float LastBump = -5;
+
+    public GliderBoost Boost;
+
+    public Text debugText1;
+    public Text debugText2;
 
     private Transform tt;
     private Rigidbody rb;
@@ -30,10 +35,16 @@ public class LiftGlider : MonoBehaviour
         tt = transform;
         rb = GetComponent<Rigidbody>();
         RecentLift = new List<float>();
+        Boost = GetComponent<GliderBoost>();
     }
     // Use this for initialization
     void Start()
     {
+        if (!GameManager.instance.DebugMode)
+        {
+            debugText2.gameObject.SetActive(false);
+            debugText1.gameObject.SetActive(false);
+        }
     }
 
     private float CalculateLift(float velocity)
@@ -53,7 +64,7 @@ public class LiftGlider : MonoBehaviour
         LiftGravModifier = 0.5f;
         //LiftGravModifier = Mathf.Lerp(Mathf.Clamp01(0.2f + Mathf.Clamp(Vector3.Angle(Vector3.up, tt.forward) - Mathf.Clamp(Lift / 2,0,45), 0, 180) / 180), 0.7f, Mathf.Clamp01(Mathf.Pow(Lift / 60, 0.2f)));
         RecentLift.Add(CalculateLift(rb.velocity.magnitude * LiftGravModifier));
-        while (RecentLift.Count >  60) RecentLift.RemoveAt(0);
+        while (RecentLift.Count > 60) RecentLift.RemoveAt(0);
         Lift = RecentLift.Average();
 
         //Debug.Log("Velocity: " + rb.velocity.magnitude + " Lift: " + Lift);
@@ -74,24 +85,33 @@ public class LiftGlider : MonoBehaviour
 
         GravModifier = (forwardGravMod + downwardGravMod + liftGravMod * 2) / 4;
 
-        //debugText2.text =
-        //    forwardGravMod + "\n" +
-        //    downwardGravMod + "\n" +
-        //    liftGravMod * 2 + "\n" +
-        //    "/4 = " + GravModifier + "\n\n" +
-        //    Mathf.Clamp01(Mathf.Pow(Lift / 30, 3f)) + "\n";
-
-
         LocalVelocity = tt.rotation * LocalVelocity;
 
         LocalVelocity = Vector3.Lerp(rb.velocity - rb.velocity * 0.2f * Time.deltaTime,
             LocalVelocity,
-            5f * Time.deltaTime) + Physics.gravity * rb.mass * (GravModifier * GravModifierImpact);
+            5f * Time.deltaTime);
 
-        rb.velocity = LocalVelocity;
+        LocalVelocity = Vector3.Lerp(LocalVelocity, rb.velocity, GravModifier * Mathf.Clamp01(Velocity / (Lift * LiftMultiplier) - 1));
 
-        //debugText1.text = "Lift: " + Lift.ToString("F1") + "\nHeight: " + tt.position.y.ToString("F1") + "\nVelocity: " + Velocity.ToString("F1");
 
+        LocalVelocity += Physics.gravity * rb.mass * (GravModifier * GravModifierImpact);
+
+        if (!float.IsNaN(LocalVelocity.x))
+            rb.velocity = LocalVelocity;
+
+        if (GameManager.instance.DebugMode)
+        {
+            debugText1.text = "Boost: " + Boost.Boost;
+            debugText2.text = "Velocity: " + Velocity;
+            //debugText2.text =
+            //forwardGravMod + "\n" +
+            //downwardGravMod + "\n" +
+            //liftGravMod * 2 + "\n" +
+            //"/4 = " + GravModifier + "\n\n" +
+            //Mathf.Clamp01(Mathf.Pow(Lift / 30, 3f)) + "\n";
+
+            //debugText1.text = "Lift: " + Lift.ToString("F1") + "\nHeight: " + tt.position.y.ToString("F1") + "\nVelocity: " + Velocity.ToString("F1") + "\n DownwardMod: " + Mathf.Clamp01(Velocity / (Lift * LiftMultiplier) - 1);
+        }
 
         #region nonWorking
         /*
@@ -136,7 +156,14 @@ public class LiftGlider : MonoBehaviour
     public void AddLift(float value)
     {
         if (RecentLift.Count <= 0) return;
-        RecentLift.Add(RecentLift[RecentLift.Count-1] + value);
+        RecentLift.Add(RecentLift[RecentLift.Count - 1] + value);
+    }
+
+
+
+    void OnCollisionEnter(Collision other)
+    {
+        LastBump = Time.time;
     }
 
 

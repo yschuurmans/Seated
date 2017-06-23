@@ -3,20 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SceneManager : MonoBehaviour {
+public class SceneManager : MonoBehaviour
+{
 
     string levelName = "Island";
     Text levelBtnText;
 
-    void Awake ()
+    void Awake()
     {
         DontDestroyOnLoad(this);
-        foreach (Button b in FindObjectOfType<Canvas>().GetComponentsInChildren<Button>() )
-        { if (b.name == "ChangeLevelBtn")
-                levelBtnText = b.GetComponentInChildren<Text>(); }
+        foreach (Button b in FindObjectOfType<Canvas>().GetComponentsInChildren<Button>())
+        {
+            if (b.name == "ChangeLevelBtn")
+                levelBtnText = b.GetComponentInChildren<Text>();
+        }
     }
 
-	void Update()
+    void Update()
     {
         if (levelName == "Island")
             levelBtnText.text = "Level: Island";

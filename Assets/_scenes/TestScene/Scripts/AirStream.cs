@@ -222,6 +222,8 @@ public class AirStream : MonoBehaviour
 
     void OnDrawGizmos()
     {
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(startPoint.position, endPoint.position);
         if (!Application.isPlaying) return;
 
         if (GameManager.instance.flyers[0] == null ||

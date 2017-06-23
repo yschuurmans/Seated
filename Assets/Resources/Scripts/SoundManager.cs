@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -35,11 +36,11 @@ public class SoundManager : MonoBehaviour
         ambienceSounds = gameObject.AddComponent<AudioSource>();
 
         ambienceSounds.loop = true;
-        
+
         ambienceSounds.clip = Ambience;
 
-        ambienceSounds.volume = 0.3f;
-        WindSource.volume = 0.4f;
+        ambienceSounds.volume = 0.25f;
+        WindSource.volume = 0.5f;
         sfxSounds.volume = 0.2f;
         WindSource.clip = Wind;
         WindSource.loop = true;
