@@ -40,11 +40,15 @@ public class LiftGlider : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+<<<<<<< HEAD
         if (!GameManager.instance.DebugMode)
         {
             //debugText2.gameObject.SetActive(false);
             //debugText1.gameObject.SetActive(false);
         }
+=======
+        
+>>>>>>> da29c5c82a19c8d4e7df945f55d774ba2f037376
     }
 
     private float CalculateLift(float velocity)
