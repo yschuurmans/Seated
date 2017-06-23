@@ -60,6 +60,8 @@ public class PlayerChallengeModule : MonoBehaviour
             if (_activeChallenge == value)
                 return;
 
+            CurrentTargetLocation = null;
+
             //Make challenge start triggers visible to camera depending on if player is currently in a challenge
             if (value == null)
             {
@@ -145,14 +147,17 @@ public class PlayerChallengeModule : MonoBehaviour
         {
             CompletedChallengeResults.Add(ActiveChallenge, elapsedTime);
         }
+        Challenge completedChallenge = ActiveChallenge;
         OnPlayerCompletedChallenge(this);
-        Challenge.ChallengeMedal medal = ActiveChallenge.GetAchievedMedal(elapsedTime);
+        Challenge.ChallengeMedal medal = completedChallenge.GetAchievedMedal(elapsedTime);
 
         if (TextField != null)
         {
             TextField.text = medal == Challenge.ChallengeMedal.None ? "You were too slow! Better luck next time!" : "Congratulations, you received a " + medal + " medal with a time of " + elapsedTime + " seconds!";
             Debug.Log("Player achieved a " + medal + " medal!");
         }
-        ActiveChallenge = null;
+
+        if(ActiveChallenge != null)
+            ActiveChallenge = null;
     }
 }

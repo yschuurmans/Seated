@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    public static float instance;
+    public static InputManager Instance;
+
     private DeltaFlyer df;
     public float turnRate;
     public float velocity;
@@ -18,6 +19,16 @@ public class InputManager : MonoBehaviour
 
     public enum JawMode { Disabled, Enabled, Half, Quarter }
     public JawMode JawEnabled;
+
+    void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+        {
+            Destroy(this.gameObject);
+        }
+    }
 
     // Use this for initialization
     void Start()

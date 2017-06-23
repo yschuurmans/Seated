@@ -55,7 +55,11 @@ namespace Assets._resources.Scripts.ChallengeScripts
 
             if (ShowMarker)
                 StartCoroutine(UpdateMarkerScreenPosition(player));
-
+            else
+            {
+                WorldWaypointMarker.SetActive(false);
+                ScreenWaypointMarker.SetActive(false);
+            }
             WorldWaypointMarker.SetActive(ShowMarker);
         }
 

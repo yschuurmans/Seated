@@ -2935,8 +2935,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Boost: 0
   MaxBoost: 5
-  BoostMultiplier: 750
+  BoostMultiplier: 1100
   BoostBar: {fileID: 4204399623610290}
+  LastBoost: 0
 --- !u!114 &114433929924713432
 MonoBehaviour:
   m_ObjectHideFlags: 1

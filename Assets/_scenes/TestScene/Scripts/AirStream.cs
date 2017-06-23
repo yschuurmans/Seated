@@ -21,6 +21,8 @@ public class AirStream : MonoBehaviour
     public GameObject Particles;
     public ParticleSystem[] pSystems;
 
+    private SoundManager soundM;
+
     public List<DeltaFlyer> inAirstream = new List<DeltaFlyer>();
     public List<DeltaFlyer> inDetectionRange = new List<DeltaFlyer>();
 
@@ -37,6 +39,7 @@ public class AirStream : MonoBehaviour
             sm.radius = thickness;
             ps.Stop();
         }
+
     }
 
     // Use this for initialization
@@ -47,6 +50,8 @@ public class AirStream : MonoBehaviour
 
         endPoint.LookAt(startPoint);
         endPoint.transform.Rotate(90, 0, 0);
+
+        soundM = FindObjectOfType<SoundManager>();
     }
 
 
@@ -128,6 +133,9 @@ public class AirStream : MonoBehaviour
                     df.detectAirstream(this, closestPoint);
                 }
             }
+
+            if (df.isInAirstream) soundM.PlayWind();
+            else soundM.StopWind();
         }
     }
 
