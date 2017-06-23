@@ -20,9 +20,16 @@ namespace Assets._resources.Scripts.ChallengeScripts
         float screenMargin = 50;
         Rect screenRect;
 
+
+        //gizmosvars
+
+        Vector3 objPosScreenPos;
+        Vector3 gizNewPos;
+        Vector3 forwardVec;
+
         void Awake()
         {
-           
+
             screenRect = new Rect(screenMargin, screenMargin, Screen.width - (screenMargin * 2), Screen.height - (screenMargin * 2));
             trigger = GetComponent<Collider>();
             SequenceIndex = transform.GetSiblingIndex();
@@ -56,12 +63,12 @@ namespace Assets._resources.Scripts.ChallengeScripts
         {
             while (ShowMarker)
             {
-                Vector3 pos = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, 0, 0));
+                Vector3 pos = Camera.main.WorldToScreenPoint(transform.position);
                 debugWorldPos = pos;
                 if (screenRect.Contains(pos) && pos.z >= 0)
                 {
                     //waypoint in the world
-                    WorldWaypointMarker.transform.position = transform.position;
+                    WorldWaypointMarker.transform.position = transform.position + new Vector3(0, 10, 0);
                     WorldWaypointMarker.transform.LookAt(Camera.main.transform.position);
 
                     if (!WorldWaypointMarker.activeSelf) WorldWaypointMarker.SetActive(true);
@@ -80,7 +87,7 @@ namespace Assets._resources.Scripts.ChallengeScripts
 
         Vector3 PlaceOffscreen(Vector3 screenpos)
         {
-            if(screenpos.z < 0)
+            if (screenpos.z < 0)
             {
                 screenpos *= -1;
             }
@@ -104,7 +111,7 @@ namespace Assets._resources.Scripts.ChallengeScripts
             if (cos > 0)
             {
                 screenpos = new Vector3(screenBounds.y / m, screenBounds.y, 0);
-                
+
             }
             else
             {
@@ -131,44 +138,25 @@ namespace Assets._resources.Scripts.ChallengeScripts
 
         private Vector3 GetMarkerPosition(Vector3 objPos)
         {
-            //Vector3 relativePosition = Camera.main.transform.InverseTransformPoint(transform.position);
-            //relativePosition.z = Mathf.Max(relativePosition.z, 1.0f);
+            Vector2 objPos2d = objPos;
+            Vector2 forward = (screenRect.center - objPos2d).normalized;
 
-            //Vector3 pos;
-            //pos = Camera.main.WorldToViewportPoint(Camera.main.transform.TransformPoint(relativePosition));
-            //pos = new Vector3(Mathf.Clamp(pos.x, screenMargin, 1.0f - screenMargin),
-            //                                 Mathf.Clamp(pos.y, screenMargin, 1.0f - screenMargin),
-            //                                 pos.z);
-
-            //return pos;
-
-            //Vector3 noClampPosition = Camera.main.WorldToScreenPoint(transform.position);
-            //Vector3 clampedPosition = new Vector3(Mathf.Clamp(noClampPosition.x, 0 + screenMargin, Screen.width - screenMargin),
-            //                                                        Mathf.Clamp(noClampPosition.y, 0 + screenMargin, Screen.height - screenMargin),
-            //                                                          noClampPosition.z);
-
-            //return clampedPosition;
-
-            //if (objPos.z < 0)
-            //{
-            //    objPos *= -1;
-            //}
-
-            if (screenRect.Contains(objPos))
+            if (objPos.z > 0)
             {
-                objPos *= -1;
-                Vector3 screenCenter = new Vector3(screenRect.center.x, screenRect.center.y, 0);
-                Vector3 forward = (Camera.main.WorldToScreenPoint(objPos) - screenCenter).normalized;
-               
-                Vector3 newPos = screenRect.center;
-                while (screenRect.Contains(newPos))
-                {
-                    newPos += forward;
-                }
-
-                objPos = newPos;
+                forward *= -1;
             }
 
+            Vector2 newPos = screenRect.center;
+            while (screenRect.Contains(newPos))
+            {
+                newPos += forward;
+            }
+
+            objPos = newPos;
+
+            gizNewPos = newPos;
+            objPosScreenPos = Camera.main.WorldToScreenPoint(objPos);
+            forwardVec = forward;
 
             Bounds bounds = new Bounds(screenRect.center, screenRect.size);
             Vector3 point = bounds.ClosestPoint(objPos);
@@ -198,6 +186,16 @@ namespace Assets._resources.Scripts.ChallengeScripts
             if (!Application.isPlaying) return;
             Gizmos.color = Color.red;
             Gizmos.DrawLine(screenRect.center, debugWorldPos);
+
+            Gizmos.color = Color.green;
+            Gizmos.DrawSphere(objPosScreenPos, 100);
+
+
+            Gizmos.color = Color.black;
+            Gizmos.DrawSphere(gizNewPos, 100);
+
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(screenRect.center, forwardVec * 100);
         }
 
         public enum LocationType
