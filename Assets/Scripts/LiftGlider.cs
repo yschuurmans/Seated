@@ -42,8 +42,8 @@ public class LiftGlider : MonoBehaviour
     {
         if (!GameManager.instance.DebugMode)
         {
-            debugText2.gameObject.SetActive(false);
-            debugText1.gameObject.SetActive(false);
+            //debugText2.gameObject.SetActive(false);
+            //debugText1.gameObject.SetActive(false);
         }
     }
 
