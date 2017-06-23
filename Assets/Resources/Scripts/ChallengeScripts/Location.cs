@@ -85,57 +85,6 @@ namespace Assets._resources.Scripts.ChallengeScripts
             }
         }
 
-        Vector3 PlaceOffscreen(Vector3 screenpos)
-        {
-            if (screenpos.z < 0)
-            {
-                screenpos *= -1;
-            }
-
-            Vector3 screencenter = new Vector3(Screen.width, Screen.height, 0) / 2;
-
-            screenpos -= screencenter;
-
-            float angle = Mathf.Atan2(screenpos.y, screenpos.x);
-            angle -= 90 + Mathf.Deg2Rad;
-
-            float cos = Mathf.Cos(angle);
-            float sin = -Mathf.Sin(angle);
-
-            screenpos = screencenter + new Vector3(sin * 150, cos * 150, 0);
-
-            float m = cos / sin;
-
-            Vector3 screenBounds = screencenter * 0.9f;
-
-            if (cos > 0)
-            {
-                screenpos = new Vector3(screenBounds.y / m, screenBounds.y, 0);
-
-            }
-            else
-            {
-                screenpos = new Vector3(-screenBounds.y / m, -screenBounds.y, 0);
-            }
-
-            if (screenpos.x > screenBounds.x)
-            {
-                screenpos = new Vector3(screenBounds.x, screenBounds.x * m, 0);
-            }
-            else if (screenpos.x < -screenBounds.x)
-            {
-                screenpos = new Vector3(-screenBounds.x, -screenBounds.x * m, 0);
-            }
-
-            screenpos += screencenter;
-
-            return screenpos;
-
-
-
-
-        }
-
         private Vector3 GetMarkerPosition(Vector3 objPos)
         {
             Vector2 objPos2d = objPos;
