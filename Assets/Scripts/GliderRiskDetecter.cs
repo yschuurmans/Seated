@@ -22,7 +22,11 @@ public class GliderRiskDetecter : MonoBehaviour
     void Update()
     {
         if (Glider.Velocity > SpeedBoostMinVelocity)
-            Boost.AddBoost(Mathf.Clamp01((Glider.Velocity - SpeedBoostMinVelocity) / (SpeedBoostMaxClamp - SpeedBoostMinVelocity)) * Time.deltaTime);
+            Boost.AddBoost(Mathf.Clamp01((Glider.Velocity - SpeedBoostMinVelocity) / (SpeedBoostMaxClamp - SpeedBoostMinVelocity)) * Time.deltaTime * 2f);
+        if (Time.time - Glider.LastBump > 10)
+        {
+            Boost.AddBoost(Glider.Velocity / 100 * Time.deltaTime);
+        }
     }
 
     void OnTriggerStay(Collider other)
