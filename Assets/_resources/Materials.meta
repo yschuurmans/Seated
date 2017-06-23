@@ -1,7 +1,11 @@
 fileFormatVersion: 2
 guid: 3fc96b5f9283cfd4fb96dd2ac852ceba
 folderAsset: yes
+<<<<<<< HEAD
 timeCreated: 1498129933
+=======
+timeCreated: 1498134668
+>>>>>>> Demobranch
 licenseType: Free
 DefaultImporter:
   userData: 
