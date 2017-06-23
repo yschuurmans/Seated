@@ -138,6 +138,16 @@ namespace Assets._resources.Scripts.ChallengeScripts
         {
             Debug.Log("Challenge Finished");
             IsRunning = false;
+
+            var enumerator = ParticipantStatus.Keys.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                if (enumerator.Current != null)
+                    enumerator.Current.ActiveChallenge = null;
+            }
+            enumerator.Dispose();
+
+            ParticipantStatus = new Dictionary<PlayerChallengeModule, bool>();
         }
     }
 }
