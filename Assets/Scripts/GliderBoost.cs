@@ -28,7 +28,7 @@ public class GliderBoost : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-        if(boostBonus > 1)
+        if(Time.time - LastBoost > 1)
             boostBonus -= 0.05f * Time.deltaTime;
 
         BoostBar.localScale = new Vector3(BoostBar.localScale.x, StartLength * (Boost / MaxBoost), BoostBar.localScale.z);
