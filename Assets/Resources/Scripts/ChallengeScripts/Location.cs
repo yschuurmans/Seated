@@ -68,8 +68,8 @@ namespace Assets._resources.Scripts.ChallengeScripts
                 if (screenRect.Contains(pos) && pos.z >= 0)
                 {
                     //waypoint in the world
-                    WorldWaypointMarker.transform.position = transform.position + new Vector3(0, 10, 0);
-                    WorldWaypointMarker.transform.LookAt(Camera.main.transform.position);
+                    WorldWaypointMarker.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, 15, 0));
+                   
 
                     if (!WorldWaypointMarker.activeSelf) WorldWaypointMarker.SetActive(true);
                     if (ScreenWaypointMarker.activeSelf) ScreenWaypointMarker.SetActive(false);
