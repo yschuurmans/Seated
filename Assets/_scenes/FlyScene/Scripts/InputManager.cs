@@ -13,6 +13,7 @@ public class InputManager : MonoBehaviour
     bool playerIndexSet = false;
     GamePadState state;
     GamePadState prevState;
+    GameManager gm;
     PlayerIndex playerIndex;
 
 
@@ -23,6 +24,16 @@ public class InputManager : MonoBehaviour
         df = GetComponent<DeltaFlyer>();
         flyObject = GetComponent<Rigidbody>();
         flyObject.velocity = Vector3.zero;
+        gm = FindObjectOfType<GameManager>();
+
+    }
+
+    void Update()
+    {
+        //if (Input.GetKey(KeyCode.Escape))
+        //{
+        //    gm.togglePause();
+        //}
     }
 
     void FixedUpdate()

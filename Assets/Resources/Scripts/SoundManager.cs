@@ -17,7 +17,7 @@ public class SoundManager : MonoBehaviour
     AudioSource ambienceSounds;
 
     bool playSounds = true;
-    bool playMusic = false;
+    bool playMusic = true;
     public int audioSources = 16;
 
     // Use this for initialization
