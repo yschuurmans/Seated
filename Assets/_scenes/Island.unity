@@ -3051,6 +3051,12 @@ Transform:
   m_PrefabParentObject: {fileID: 4014725161118816, guid: ff8b48898f6ec044b9d7b96627cf62a8,
     type: 2}
   m_PrefabInternal: {fileID: 293869101}
+--- !u!114 &295518255 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114364862064619658, guid: 115ba0226996aa345bdcfeab9c8b2e79,
+    type: 2}
+  m_PrefabInternal: {fileID: 126569295}
+  m_Script: {fileID: 11500000, guid: 9c2a903ed8661b742b65edfb66682c1d, type: 3}
 --- !u!1001 &296237380
 Prefab:
   m_ObjectHideFlags: 0
@@ -17326,7 +17332,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1876e91f3b796bd4f8543affaa95c9e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  raptors: []
+  raptors:
+  - {fileID: 295518255}
   waveTime: 2000
   waveLength: 10
 --- !u!114 &1819368538
