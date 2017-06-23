@@ -8,6 +8,9 @@ public class GliderBoost : MonoBehaviour
     public float Boost;
     public float MaxBoost;
     public float BoostMultiplier;
+    public Transform BoostBar;
+
+    private float StartLength;
 
     private LiftGlider Glider;
     private float boostBonus = 0;
@@ -16,13 +19,20 @@ public class GliderBoost : MonoBehaviour
 	{
 	    Glider = GetComponent<LiftGlider>();
 	}
-	
+
+    void Start()
+    {
+        StartLength = BoostBar.localScale.y;
+    }
 	// Update is called once per frame
 	void Update ()
 	{
         if(boostBonus > 1)
             boostBonus -= 0.05f * Time.deltaTime;
-	}
+
+        BoostBar.localScale = new Vector3(BoostBar.localScale.x, StartLength * (Boost / MaxBoost), BoostBar.localScale.z);
+
+    }
 
     public void AddBoost(float boostToAdd)
     {
