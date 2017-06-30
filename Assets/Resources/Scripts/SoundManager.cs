@@ -44,7 +44,7 @@ public class SoundManager : MonoBehaviour
         ambienceSounds.clip = Ambience;
 
         ambienceSounds.volume = 0.25f;
-        WindSource.volume = 0.5f;
+        WindSource.volume = 1.5f;
         sfxSounds.volume = 0.2f;
         WindSource.clip = Wind;
         WindSource.loop = true;
@@ -53,11 +53,12 @@ public class SoundManager : MonoBehaviour
 
     void Start()
     {
-        if (playMusic) ambienceSounds.Play();
+        if (playMusic && !ambienceSounds.isPlaying) ambienceSounds.Play();
     }
 
     void Update()
     {
+        
         if (Random.value < 0.002 && playSounds)
         {
             RandomSound();
