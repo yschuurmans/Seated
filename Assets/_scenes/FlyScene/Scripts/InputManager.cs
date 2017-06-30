@@ -103,6 +103,7 @@ public class InputManager : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.LeftShift))
         {
+            glider.Boost.UseBoost(1f);
             //transform.position += Vector3.down * velocity;
         }
 
