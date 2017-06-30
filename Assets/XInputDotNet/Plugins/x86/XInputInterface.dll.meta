@@ -23,6 +23,7 @@ PluginImporter:
           Exclude OSXIntel: 0
           Exclude OSXIntel64: 0
           Exclude OSXUniversal: 0
+          Exclude WebGL: 0
           Exclude Win: 0
           Exclude Win64: 1
     data:
@@ -125,6 +126,12 @@ PluginImporter:
         enabled: 0
         settings:
           CPU: None
+    data:
+      first:
+        WebGL: WebGL
+      second:
+        enabled: 1
+        settings: {}
     data:
       first:
         iPhone: iOS

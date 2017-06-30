@@ -339,7 +339,7 @@ ParticleSystem:
   simulationSpeed: 1
   looping: 1
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   autoRandomSeed: 1
   startDelay:
     minMaxState: 0
@@ -383,7 +383,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 488700284
+  randomSeed: 1514743341
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -865,7 +865,7 @@ ParticleSystem:
     randomDirectionAmount: 0
     sphericalDirectionAmount: 0
   EmissionModule:
-    enabled: 1
+    enabled: 0
     serializedVersion: 4
     rateOverTime:
       minMaxState: 0
@@ -3295,7 +3295,7 @@ ParticleSystem:
   simulationSpeed: 1
   looping: 1
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   autoRandomSeed: 1
   startDelay:
     minMaxState: 0
@@ -3339,7 +3339,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -680722749
+  randomSeed: 1149673491
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -3821,7 +3821,7 @@ ParticleSystem:
     randomDirectionAmount: 0
     sphericalDirectionAmount: 0
   EmissionModule:
-    enabled: 1
+    enabled: 0
     serializedVersion: 4
     rateOverTime:
       minMaxState: 0

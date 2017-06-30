@@ -80,6 +80,7 @@ public class PlayerChallengeModule : MonoBehaviour
     void Awake()
     {
         DeltaFlyer = GetComponent<DeltaFlyer>();
+        TextField = GameObject.Find("ChallengeText").GetComponent<Text>();
     }
 
     void Start()
@@ -91,7 +92,7 @@ public class PlayerChallengeModule : MonoBehaviour
     {
         if (ActiveChallenge != null && TextField != null)
         {
-            TextField.text = "Time: \t" + (Time.time - StartTime);
+            TextField.text = "Time: \t" + (Time.time - StartTime).ToString("F1");
         }
     }
     private void ToggleStartLocationVisibility(bool setVisible)
@@ -153,7 +154,7 @@ public class PlayerChallengeModule : MonoBehaviour
 
         if (TextField != null)
         {
-            TextField.text = medal == Challenge.ChallengeMedal.None ? "You were too slow! Better luck next time!" : "Congratulations, you received a " + medal + " medal with a time of " + elapsedTime + " seconds!";
+            TextField.text = medal == Challenge.ChallengeMedal.None ? "You were too slow! Better luck next time!" : "Congratulations, you received a " + medal + " medal with a time of " + elapsedTime.ToString("F1") + " seconds!";
             Debug.Log("Player achieved a " + medal + " medal!");
         }
 

@@ -30,6 +30,7 @@ public class SceneManager : MonoBehaviour
         {
             //FindObjectsOfType<SoundManager>
             UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+            Destroy(this.gameObject);
         }
     }
 
