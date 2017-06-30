@@ -14,7 +14,7 @@ public class GliderBoost : MonoBehaviour
     private float StartLength;
 
     private LiftGlider Glider;
-    private float boostBonus = 0;
+    private float boostBonus = 1;
 	// Use this for initialization
 	void Awake ()
 	{
@@ -29,7 +29,7 @@ public class GliderBoost : MonoBehaviour
 	void Update ()
 	{
         if(Time.time - LastBoost > 1)
-            boostBonus -= 0.05f * Time.deltaTime;
+            boostBonus = 1;
 
         BoostBar.localScale = new Vector3(BoostBar.localScale.x, StartLength * (Boost / MaxBoost), BoostBar.localScale.z);
 
