@@ -37,6 +37,7 @@ public class GliderBoost : MonoBehaviour
 
     public void AddBoost(float boostToAdd)
     {
+        boostToAdd = Mathf.Lerp(0, boostToAdd, (Time.time - LastBoost) / 2);
         Boost = Mathf.Clamp(Boost + boostToAdd, 0, MaxBoost);
     }
 
