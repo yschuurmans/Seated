@@ -138,10 +138,10 @@ public class PlayerChallengeModule : MonoBehaviour
     {
         float elapsedTime = Time.time - StartTime;
 
-        if (CompletedChallengeResults.ContainsKey(ActiveChallenge) &&
-            CompletedChallengeResults[ActiveChallenge] > elapsedTime)
+        if (CompletedChallengeResults.ContainsKey(ActiveChallenge))
         {
-            CompletedChallengeResults[ActiveChallenge] = elapsedTime;
+            if(CompletedChallengeResults[ActiveChallenge] > elapsedTime)
+                CompletedChallengeResults[ActiveChallenge] = elapsedTime;
         }
         else
         {
